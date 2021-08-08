@@ -144,7 +144,7 @@
         </el-dialog>
 
         <el-dialog width=50% title="添加动作" :visible.sync="addActionVisible">
-          <el-row :gutter="10">
+          <el-row :gutter="15">
             <el-col :span="10">
                <el-input
                   placeholder="请输入你要搜索的动作"
@@ -153,17 +153,21 @@
                   v-model="searchAction">
               </el-input>
             </el-col>
+            <el-col :span="1">
+        <el-button type="primary" icon="el-icon-search" @click="getactionList(searchAction,action_page,action_size)">筛选</el-button>
+        </el-col>
           </el-row>
 
           <div class="height_action_leg"></div>
-          <el-row>
-            <el-col :span="8" v-for="(o, index) in 2" :key="o" :offset="index > 0 ? 2 : 0">
+          <el-row :gutter="20">
+            <el-col :span="10" v-for="o in actionList" :key="o" :offset="index > 0 ? 2 : 0" >
               <el-card :body-style="{ padding: '0px' }">
                 <!-- ljh修改图片类型方便后续修改 -->
-                <el-image :src="actionLsit"></el-image>
+                <el-image :src="o.actionImgs"></el-image>
                 <div style="padding: 14px;">
-                  <span>运动1min</span>
-                    <el-button type="text" class="button">添加</el-button>
+                  <span>{{o.actionName}}</span>
+                    <el-button type="text" class="button"
+                    @click="add_action(o)">添加</el-button>
                 </div>
               </el-card>
             </el-col>
@@ -174,6 +178,9 @@
               <el-pagination
               background
               layout="prev, pager, next"
+              @current-change="action_CurrentChange"
+              :current-page="action_page"
+              @size-change="getactionList(searchAction,action_page,action_size)"
               :total="1000">
               </el-pagination>
             </div>
@@ -184,13 +191,14 @@
           </el-row>
 
           <el-row>
-            <el-col :span="8" v-for="(o, index) in 2" :key="o" :offset="index > 0 ? 2 : 0">
+            <el-col :span="8" v-for="o in added_number" :key="o" :offset="index > 0 ? 2 : 0">
               <el-card :body-style="{ padding: '0px' }">
                 <!-- ljh修改图片类型 -->
-                <el-image :src="actionLsit"></el-image>
+                <el-image :src="added_actionList[o-1].actionImgs"></el-image>
                 <div style="padding: 14px;">
-                  <span>运动1min</span>
-                    <el-button type="text" class="button">删除</el-button>
+                  <span>{{added_actionList[o-1].actionName}}</span>
+                    <el-button type="text" class="button"
+                    @click="delect_action(o-1)">删除</el-button>
                 </div>
               </el-card>
             </el-col>
@@ -208,22 +216,22 @@
 
         </el-dialog>
 
-        <el-dialog width=50% title="添加分类标签" :visible.sync="addClassVisible">
-          <el-row :gutter="10">
-              <h3>年龄分类</h3>
+        <el-dialog width=50% title="添加分类标签" :visible.sync="addClassVisible" >
+          <el-col v-for="tem in label_List" :key="tem" :offset="index > 0 ? 2 : 0">
+          <el-row :gutter="10" >
+              <h3>{{tem.className}}</h3>
           </el-row>
           <el-row :gutter="10">
               <template>
-                <el-checkbox-group v-model="ageList">
-                  <el-checkbox label="3-6岁(幼儿园)"></el-checkbox>
-                  <el-checkbox label="7-15岁(小学初中)"></el-checkbox>
-                  <el-checkbox label="15-18岁(高中生)"></el-checkbox>
-                  <el-checkbox label="19-22岁(大学生)"></el-checkbox>
-                </el-checkbox-group>
+                <!-- <el-checkbox-group v-model="ageList"> -->
+                  <el-checkbox  v-model="if_label[tem.idList[tem2-1]]" v-for="tem2 in tem.classNum" :key="tem2" :offset="index > 0 ? 2 : 0">
+                    {{tem.classValue.split(",")[tem2-1]}}</el-checkbox>
+                <!-- </el-checkbox-group> -->
               </template>
           </el-row>
+          </el-col>
 
-          <el-row :gutter="10">
+          <!-- <el-row :gutter="10">
               <h3>目标分类</h3>
           </el-row>
           <el-row :gutter="10">
@@ -280,7 +288,7 @@
                   <el-checkbox label="E类"></el-checkbox>
                 </el-checkbox-group>
               </template>
-          </el-row>
+          </el-row> -->
 
           <div class="height_action_leg"></div>
           <el-row :gutter="10" padding="30px">
@@ -453,6 +461,10 @@
 <script>
 import { getList,searchCourse,editCourse,deleteCourse,addCourse } from '@/api/course'
 import { getToken } from '@/utils/auth'
+import { getAction } from '@/api/action'
+import {
+    getList as courseClass_getlist
+}from '@/api/courseClass'
 export default {
     data() {
       return {
@@ -482,7 +494,7 @@ export default {
           searchCourseKey:''
         },
         selectDelIdx: null,
-        searchAction:null,
+        searchAction:'',
         page: 1 , //当前页
         size: 10 , //每页展示的条数
         total:null, //数据总条数
@@ -500,11 +512,25 @@ export default {
           courseIntro:'',
           targetAge:''
         },
-        actionLsit:"https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
+        action_photo_list:['first','seand'],
+        photoActionList:{
+          first:"https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png",
+          seand:"https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
+        },
+        actionList:[],//动作列表,
+        action_page:1,
+        action_page_first:1,//动作页
+        action_size:2,//动作大小
+        added_number:0,//已添加动作数量
+        added_actionList:[],//已添加动作列表
+        label_List:null,//分类列表
+        if_label:[]
       }
     },
     created() {
       this.fetchData()
+      this.getcourseClass()
+      this.getactionList('',this.action_page_first,this.action_size)
     },
     methods:{
       fetchData() {
@@ -572,6 +598,50 @@ export default {
           this.courseGroup.classUrl = response.data.url
           console.log(response.data)
         })
+      },
+      //拼接两个语句
+      get2str(first,second){
+          var url = first+'.'+second;
+          return url;
+      },
+      //获取动作列表并赋值
+      getactionList(searchAction,action_page,action_size){
+        getAction(searchAction,action_page,action_size).then(response=>{
+          this.actionList=response.data;
+        })
+      },
+      //获取分类列表
+      getcourseClass(){
+        courseClass_getlist().then(response=>{
+          this.label_List=response.data.adminCourseClassDtoList;
+        })
+      },
+      action_CurrentChange(val){
+        this.action_page=val;
+        this.getactionList(this.searchAction,val,this.action_size);
+      },
+      add_action(val){
+        this.added_number++;
+        this.added_actionList.push(val);
+      },
+      delect_action(number){
+        this.added_number--;
+        this.added_actionList.splice(number,1)
+			},
+      add_course(){
+        var action=[];
+        for(var t=0;t<this.added_actionList.length();t++){
+          action.push(added_actionList[t].actionId)
+        }
+        this.upload_course.action=action;
+        var label=[];
+        for(var t=0;t<this.if_label.length();t++){
+          if(this.if_label[t]==ture)
+            label.push(t)
+        }
+        this.upload_course.action=action.toString();
+        this.upload_course.label=label.toString();
+        this.addCourse();
       }
     }
   }
