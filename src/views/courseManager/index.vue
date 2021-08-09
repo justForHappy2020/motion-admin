@@ -70,9 +70,14 @@
                 <h3>课程封面:</h3>
               </el-col>
               <el-col :span="7">
-                <el-upload auto-upload=false limit=2 action="https://jsonplaceholder.typicode.com/posts/" list-type="picture-card"
-                  :http-request="modifyHptios2" :on-preview="handlePictureCardPreview" :on-remove="handleRemove"
-                  v-model="transformPhoto.file">
+                <el-upload auto-upload=flase limit=1 action="http://106.55.25.94:8080/api/user/modifyHptIos"
+                  :data="transformPhoto"
+                  list-type="picture-card"
+                  :on-preview="handlePictureCardPreview"
+                  :on-remove="handleRemove"
+                  :on-success="transformPhoto2List"
+                  name="headPortrait"
+                  v-model="photoList">
                   <i class="el-icon-plus"></i>
                   <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
                 </el-upload>
@@ -134,7 +139,7 @@
             <div class="height_action_leg"></div>
             <el-row :gutter="10" padding="30px">
               <el-col :span="5" :offset="5">
-                <el-button type="success" >立即添加</el-button>
+                <el-button type="success" @click="insert_course">立即添加</el-button>
               </el-col>
               <el-col :span="5">
                 <el-button @click="dialogFormVisible = false">取消</el-button>
@@ -207,7 +212,7 @@
           <div class="height_action_leg"></div>
           <el-row :gutter="10" padding="30px">
             <el-col :span="5" :offset="5">
-              <el-button type="success" >确定</el-button>
+              <el-button type="success" @click="addActionVisible=false" >确定</el-button>
             </el-col>
             <el-col :span="5">
               <el-button @click="addActionVisible = false">取消</el-button>
@@ -293,7 +298,7 @@
           <div class="height_action_leg"></div>
           <el-row :gutter="10" padding="30px">
             <el-col :span="5" :offset="5">
-              <el-button type="success" >确定</el-button>
+              <el-button type="success" @click="addClassVisible=false">确定</el-button>
             </el-col>
             <el-col :span="5">
               <el-button @click="addClassVisible = false">取消</el-button>
@@ -459,15 +464,18 @@
 
 </style>
 <script>
-import { getList,searchCourse,editCourse,deleteCourse,addCourse } from '@/api/course'
+import { getList,searchCourse,editCourse,deleteCourse,
+addCourse } from '@/api/course'
 import { getToken } from '@/utils/auth'
 import { getAction } from '@/api/action'
 import {
-    getList as courseClass_getlist
+    getList as courseClass_getlist,
+    modifyHptIos 
 }from '@/api/courseClass'
 export default {
     data() {
       return {
+        token:getToken(),
         list:[],  //数据格式，改为null会报错
         listLoading: true,
         dialogFormVisible: false,
@@ -499,18 +507,19 @@ export default {
         size: 10 , //每页展示的条数
         total:null, //数据总条数
         transformPhoto:{
-          file:null,
+          file:{},
           token:getToken()
         },
         upload_course:{//上传总数据
           token:getToken(),
           courseName:'',
           backgroundUrl:'',
-          action:'',
+          actions:'',
           counts:'',
           onLine:1,
           courseIntro:'',
-          targetAge:''
+          targetAge:'',
+          label:''
         },
         action_photo_list:['first','seand'],
         photoActionList:{
@@ -524,7 +533,8 @@ export default {
         added_number:0,//已添加动作数量
         added_actionList:[],//已添加动作列表
         label_List:null,//分类列表
-        if_label:[]
+        if_label:[],
+        photoList:[]//
       }
     },
     created() {
@@ -591,11 +601,17 @@ export default {
               //alert("page为"+this.page)
               this.fetchData()
             },
+      //照片存储
+      transformPhoto2List(response){
+        console.log(response)
+        this.upload_course.backgroundUrl=response.data;
+      },
       //上传图片变成url
-      transformPhoto(){
+      transformPhoto2url(file){
         console.log(this.transformPhoto)
+        this.transformPhoto=file
         modifyHptIos(this.transformPhoto).then(response => {
-          this.courseGroup.classUrl = response.data.url
+          this.upload_course.backgroundUrl = response.data.url
           console.log(response.data)
         })
       },
@@ -628,20 +644,35 @@ export default {
         this.added_number--;
         this.added_actionList.splice(number,1)
 			},
-      add_course(){
-        var action=[];
-        for(var t=0;t<this.added_actionList.length();t++){
+      insert_course1(){
+          addCourse(this.upload_course);
+      },
+      insert_course(){
+        
+        var action=new Array();
+        var counts=new Array();
+        for(let t1=0;t1<this.added_actionList.length;t1++){
+          action.push(this.added_actionList[t1].actionId)
+          counts.push(1)
+        }
+        this.upload_course.actions=action.toString();
+        this.upload_course.counts=counts.toString();
+        var label=new Array();
+        for(let t2=0;t2<this.if_label.length;t2++){
+          if(this.if_label[t2]){
+            label.push(t2);
+          }
+        }
+        this.upload_course.label=label.toString();
+        addCourse(this.upload_course);
+        this.dialogFormVisible=false;
+      },
+      try(){
+        var action=new Array();
+        for(var t=0;t<this.added_actionList.length;t++){
           action.push(added_actionList[t].actionId)
         }
-        this.upload_course.action=action;
-        var label=[];
-        for(var t=0;t<this.if_label.length();t++){
-          if(this.if_label[t]==ture)
-            label.push(t)
-        }
         this.upload_course.action=action.toString();
-        this.upload_course.label=label.toString();
-        this.addCourse();
       }
     }
   }
