@@ -53,7 +53,7 @@
                 <h3>动作名称:</h3>
               </el-col>
               <el-col :span="7">
-                <el-input placeholder="请输入内容" v-model="action_name_input"></el-input>
+                <el-input placeholder="请输入内容" v-model="upload_action.actionName"></el-input>
               </el-col>
             </el-row>
             <el-row :gutter="10" padding="30px">
@@ -61,7 +61,11 @@
                 <h3>动作视频:</h3>
               </el-col>
               <el-col :span="7">
-                <el-upload auto-upload=false class="upload-demo" drag action="https://jsonplaceholder.typicode.com/posts/"
+                <el-upload auto-upload=false class="upload-demo" drag=true
+                action="http://106.55.25.94:8080/api/user/modifyHptIos"
+                :data="transformPhoto"
+                :on-success="upload_video"
+                name="headPortrait"
                   multiple>
                   <i class="el-icon-upload"></i>
                   <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -74,7 +78,12 @@
                 <h3>动作封面:</h3>
               </el-col>
               <el-col :span="7">
-                <el-upload auto-upload=false limit=2 action="https://jsonplaceholder.typicode.com/posts/" list-type="picture-card"
+                <el-upload auto-upload=false limit=1 
+                  action="http://106.55.25.94:8080/api/user/modifyHptIos"
+                  :data="transformPhoto"
+                  name="headPortrait"
+                  :on-success="upload_imgs" 
+                  list-type="picture-card"
                   :on-preview="handlePictureCardPreview" :on-remove="handleRemove">
                   <i class="el-icon-plus"></i>
                   <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
@@ -87,15 +96,15 @@
               </el-col>
               <el-col :span="7">
                 <div class="height_action_leg"></div>
-                <el-radio v-model="action_radio" label="1">计时</el-radio>
-                <el-radio v-model="action_radio" label="2">计次</el-radio>
+                <el-radio v-model="upload_action.type" label="1">计时</el-radio>
+                <el-radio v-model="upload_action.type" label="2">计次</el-radio>
               </el-col>
             </el-row>
             <div class="height_action_leg"></div>
             <div>
               <h3>动作相关信息</h3>
               <div class="weight_action">
-                <el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="action_textarea">
+                <el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="upload_action.actionIntro">
                 </el-input>
               </div>
             </div>
@@ -111,7 +120,7 @@
             <div class="height_action_leg"></div>
             <el-row :gutter="10" padding="30px">
               <el-col :span="5" :offset="5">
-                <el-button type="success">立即添加</el-button>
+                <el-button type="success" @click="insert_action">立即添加</el-button>
               </el-col>
               <el-col :span="5">
                 <el-button @click="dialogFormVisible = false">取消</el-button>
@@ -201,8 +210,9 @@
 
 <script>
   import {
-    getList
+    getList,insertAction
   } from '@/api/action'
+import { getToken } from '@/utils/auth'
   export default {
     data() {
       return {
@@ -221,7 +231,22 @@
         input: '',
         page:1 , //当前页
         size:10   ,//每页展示的条数
-        total:null   //数据总量
+        total:null,   //数据总量
+        upload_action:{
+          token:getToken(),
+          actionName:'',
+          actionImgs:'',
+          actionUrl:'',
+          actionIntro:'',
+          restDuration:0,
+          duration:0,
+          size:0,
+          type:0
+        },
+        transformPhoto:{
+          file:null,
+          token:getToken()
+        },
       }
     },
     created() {
@@ -276,7 +301,16 @@
               // console.log(`当前页: ${page}`);
               this.page = page;
               this.fetchData();
-            }
+            },
+      upload_video(response){
+        this.upload_action.actionUrl=response.data
+      },
+      upload_imgs(response){
+        this.upload_action.actionImgs=response.data
+      },
+      insert_action(){
+        insertAction(this.upload_action)
+      }
     }
   }
 </script>

@@ -64,13 +64,15 @@
                   <el-upload
                   auto-upload=false
                   limit=1
-                  action="123"
+                  action="http://106.55.25.94:8080/api/user/modifyHptIos"
+                  :data="transformPhoto"
                   accept=".jpg,.png"
                   drag="true"
                   list-type="picture-card"
-                  :before-upload="transformPhoto"
                   :on-preview="handlePictureCardPreview"
                   :on-remove="handleRemove"
+                  :on-success="transformPhoto2List"
+                  name="headPortrait"
                   v-model="transformPhoto.file"
                   >
                     <i class="el-icon-plus"></i>
@@ -104,13 +106,18 @@
               <section>
                 <div class="height_action"></div>
                 <template v-for="(item,index) in courseClassList">
-                  <span  v-if="item.type === 'child'">
-                    <el-row :gutter="10">
+                  <span  v-if="item.type_old === 'child'">
+                    <el-row :gutter="20">
                       <el-col :span="3">
                         <h3>分类项名{{index + 1}}</h3>
                       </el-col>
+                      
+                      
                       <el-col :span="7">
-                        <el-input placeholder="请输入内容" v-model="action_username_input"></el-input>
+                        <el-input placeholder="请输入内容" v-model="courseClassList[index].classValue"></el-input>
+                      </el-col>
+                      <el-col :span="2">
+                        <el-button @click="delect_action(index)">取消</el-button>
                       </el-col>
                     </el-row>
                     <el-row :gutter="10">
@@ -118,7 +125,11 @@
                         <h3>分类项名{{index + 1}}封面:</h3>
                       </el-col>
                       <el-col :span="10">
-                        <el-upload auto-upload=false limit=2 action="https://jsonplaceholder.typicode.com/posts/"
+                        <el-upload auto-upload=false limit=1  action="http://106.55.25.94:8080/api/user/modifyHptIos"
+                          :data="transformPhoto"
+                          :before-upload="change_number(index)"
+                          :on-success="insert_photo"
+                          name="headPortrait"
                           list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove">
                           <i class="el-icon-plus"></i>
                           <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
@@ -135,7 +146,7 @@
               <div class="height_action"></div>
               <el-row :gutter="10" pading="30px">
                 <el-col :span="5" :offset="5">
-                  <el-button type="success">确认添加分类项</el-button>
+                  <el-button type="success" @click="addCourseClass">确认添加分类项</el-button>
                 </el-col>
                 <el-col :span="5">
                   <el-button @click="dialogFormVisible = false">取消</el-button>
@@ -300,7 +311,12 @@
           token:getToken(),
           className:'',
           classUrl:''
-        }
+        },
+        transformPhoto:{
+          file:{},
+          token:getToken()
+        },
+        courseClass_number:0//记录正在操作的分类项
       }
     },
     created() {
@@ -337,7 +353,11 @@
       addChild() {
         this.child++
         this.courseClassList.push({
-          type: 'child'
+          type_old: 'child',
+          token:getToken(),
+          className:"",
+          classValue:"",
+          classUrl:''
         })
       },
       //上传图片转换为url
@@ -348,11 +368,35 @@
           console.log(response.data)
         })
       },
+      //修改操作位
+      change_number(val){
+        this.courseClass_number=val;
+      },
+      //照片变成Url
+      insert_photo(response){
+        this.courseClassList[this.courseClass_number].classUrl=response.data
+      },
+      //照片存储
+      transformPhoto2List(response){
+        console.log(response)
+        this.courseGroup.classUrl=response.data;
+      },
       //添加分类组
       addCourseGroup(){
         addCourseGroupList(this.courseGroup).then(response => {
           alert('上传成功')
         })
+      },
+      addCourseClass(){
+        for(let t1=0;t1<this.courseClassList.length;t1++){
+          this.courseClassList[t1].className=this.courseGroup.className;
+          addCourseList(this.courseClassList[t1])
+        }
+        dialogFormVisible = false
+      },
+      //删除list
+      delect_action(val){
+        this.courseClassList.splice(val,1)
       }
     }
   }

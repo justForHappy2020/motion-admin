@@ -20,3 +20,10 @@ export function getAction(str,action_page,size){
       }
   })
 }
+export function insertAction(data){
+  return request({
+    url:'/admin/insertAction',
+    method:'post',
+    data
+  })
+}
