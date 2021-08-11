@@ -369,7 +369,7 @@
                 <el-button
                   size="mini"
                   type="danger"
-                  @click="handleDelete(scope.$index)">删除</el-button>
+                  @click="handleDelete(scope.row.courseId)">删除</el-button>
               </template>
             </el-table-column>
             </el-table>
@@ -571,6 +571,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+           this.delete_course(index);
           this.$message({
             type: 'success',
             message: '删除成功!'
@@ -673,6 +674,9 @@ export default {
           action.push(added_actionList[t].actionId)
         }
         this.upload_course.action=action.toString();
+      },
+      delete_course(index){
+        deleteCourse(getToken(),index)
       }
     }
   }

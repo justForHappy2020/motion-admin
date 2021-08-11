@@ -176,7 +176,7 @@
             <el-table-column label="操作" width="180">
               <template slot-scope="scope">
                 <el-button size="mini" @click="handleEdit(scope.$index)">编辑</el-button>
-                <el-button size="mini" type="danger" @click="handleDelete(scope.$index)">删除</el-button>
+                <el-button size="mini" type="danger" @click="handleDelete(scope.row.courseClassId)">删除</el-button>
               </template>
             </el-table-column>
 
@@ -240,6 +240,7 @@
   import {
     getList,
     addCourseList,
+    deleteCourseClass,
     addCourseGroupList,
     modifyHptIos
   } from '@/api/courseClass'
@@ -339,6 +340,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+           this.delete_course_class(index)
           this.$message({
             type: 'success',
             message: '删除成功!'
@@ -397,6 +399,9 @@
       //删除list
       delect_action(val){
         this.courseClassList.splice(val,1)
+      },
+      delete_course_class(index){
+        deleteCourseClass(getToken(),index)
       }
     }
   }

@@ -152,7 +152,7 @@
           <el-table-column label="操作" width="180">
             <template slot-scope="scope">
               <el-button size="mini" @click="handleEdit(scope.$index)">编辑</el-button>
-              <el-button size="mini" type="danger" @click="handleDelete(scope.$index)">删除</el-button>
+              <el-button size="mini" type="danger" @click="handleDelete(scope.row.actionId)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -209,7 +209,7 @@
 
 
 <script>
-  import {
+  import {deleteAction,
     getList,insertAction
   } from '@/api/action'
 import { getToken } from '@/utils/auth'
@@ -273,6 +273,7 @@ import { getToken } from '@/utils/auth'
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+          this.delete_actioni(index);
           this.$message({
             type: 'success',
             message: '删除成功!'
@@ -310,6 +311,9 @@ import { getToken } from '@/utils/auth'
       },
       insert_action(){
         insertAction(this.upload_action)
+      },
+      delete_actioni(index){
+        deleteAction(getToken(),index)
       }
     }
   }
