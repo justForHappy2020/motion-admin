@@ -156,7 +156,7 @@
           </el-dialog>
 
           <el-table v-loading="listLoading" :data="list" border style="width: 100%">
-            <el-table-column fixed prop="courseClassld" label="课程编号" width="100">
+            <el-table-column fixed prop="courseClassId" label="课程编号" width="100">
             </el-table-column>
             <el-table-column prop="className" label="分类名" width="200">
             </el-table-column>

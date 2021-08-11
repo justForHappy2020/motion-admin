@@ -110,14 +110,14 @@
               </div>
             </div>
             <div class="height_action_leg"></div>
-            <el-row :gutter="10" padding="30px">
+            <!-- <el-row :gutter="10" padding="30px">
               <el-col :span="2">
                 <h3>创建人:</h3>
               </el-col>
               <el-col :span="7">
                 <el-input placeholder="请输入名字" v-model="action_username_input"></el-input>
               </el-col>
-            </el-row>
+            </el-row> -->
             <el-row :gutter="10" pading="30px" >
               <el-col :span="3">
                 <h3>添加动作:</h3>
@@ -314,12 +314,12 @@
             style="width: 100%">
             <el-table-column
               fixed
-              prop="Courseld"
+              prop="courseId"
               label="课程编号"
               width="100">
             </el-table-column>
             <el-table-column
-              prop="CourseName"
+              prop="courseName"
               label="课程名"
               width="180">
             </el-table-column>
@@ -350,12 +350,12 @@
               width="120">
             </el-table-column>
             <el-table-column
-              prop="creator"
+              prop="creater"
               label="创建人"
               width="150">
             </el-table-column>
             <el-table-column
-              prop="createTime"
+              prop="createtime"
               label="上传时间"
               width="125">
             </el-table-column>

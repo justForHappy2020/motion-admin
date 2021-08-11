@@ -110,12 +110,12 @@
             </div>
             <div class="height_action_leg"></div>
             <el-row :gutter="10" padding="30px">
-              <el-col :span="2">
+              <!-- <el-col :span="2">
                 <h3>创始人名称:</h3>
               </el-col>
               <el-col :span="7">
                 <el-input placeholder="请输入内容" v-model="action_username_input"></el-input>
-              </el-col>
+              </el-col> -->
             </el-row>
             <div class="height_action_leg"></div>
             <el-row :gutter="10" padding="30px">
@@ -130,7 +130,7 @@
         </el-dialog>
 
         <el-table v-loading="listLoading" :data="list" border style="width: 100%">
-          <el-table-column fixed prop="actionld" label="编号" width="150">
+          <el-table-column fixed prop="actionId" label="编号" width="150">
           </el-table-column>
           <el-table-column prop="actionName" label="名称" width="130">
           </el-table-column>

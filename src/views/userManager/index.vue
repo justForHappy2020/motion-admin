@@ -110,7 +110,7 @@
         </el-dialog>
 
         <el-table v-loading="listLoading" :data="list" border style="width: 100%">
-          <el-table-column fixed prop="userld" label="用户ID" width="180">
+          <el-table-column fixed prop="userId" label="用户ID" width="180">
           </el-table-column>
           <el-table-column prop="nickName" label="用户昵称" width="150">
           </el-table-column>
