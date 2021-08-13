@@ -5,7 +5,7 @@
       <div class="filter-container">
         <div class="filter-item-container">
           <span>分类项数量</span>
-          <el-select v-model="form.search_categoryNum" placeholder="请选择">
+          <el-select v-model="form.search_categoryNum" clearable placeholder="请选择">
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
@@ -13,14 +13,15 @@
         <div class="filter-item-container">
           <span>创建时间</span>
           <el-date-picker v-model="value_data" type="datetimerange" range-separator="至" start-placeholder="开始日期"
-            end-placeholder="结束日期">
+            end-placeholder="结束日期"
+            value-format="yyyy-MM-dd HH:mm:ss">
           </el-date-picker>
         </div>
         <div class="filter-item-container search">
           <el-input v-model="form.search_categoryKey" placeholder="请输入课程分类名的关键字"></el-input>
         </div>
 
-        <el-button type="primary" icon="el-icon-search">筛选</el-button>
+        <el-button type="primary" icon="el-icon-search" @click="fetchData">筛选</el-button>
       </div>
       <div class="filter-container">
         <span>
@@ -317,6 +318,7 @@
           token:getToken()
         },
         courseClass_number:0//记录正在操作的分类项
+        ,value_data:[]
       }
     },
     created() {
@@ -325,7 +327,7 @@
     methods: {
       fetchData() {
         this.listLoading = true
-        getList().then(response => {
+        getList(this.form.search_categoryNum,this.value_data[0],this.value_data[1],this.form.search_categoryKey).then(response => {
           this.list = response.data.adminCourseClassDtoList
           this.listLoading = false
         })

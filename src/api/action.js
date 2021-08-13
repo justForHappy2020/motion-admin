@@ -1,11 +1,15 @@
 import request from '@/utils/request'
-export function getList(page,size) {
+export function getList(page,size,type,starTime,endTime,searchStr) {
     return request({
       url: '/admin/actionList',
       method: 'get',
       params:{
         page:page,
-        size:size
+        size:size,
+        type:type,
+        starTime:starTime,
+        endTime:endTime,
+        searchStr:searchStr
         }
     })
   }
