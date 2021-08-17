@@ -51,7 +51,7 @@
             </div>
           </el-col>
         </el-row>
-
+<!-- 添加课程弹窗 -->
         <el-dialog width=90% title="课程管理/添加课程" :visible.sync="dialogFormVisible">
           <div class="height_action">请填写课程相关信息</div>
           <div class="demo-input-suffix">
@@ -147,6 +147,7 @@
             </el-row>
           </div>
         </el-dialog>
+   <!-- 添加动作以及标签的分类项 -->
 
         <el-dialog width=50% title="添加动作" :visible.sync="addActionVisible">
           <el-row :gutter="15">
@@ -305,7 +306,206 @@
             </el-col>
           </el-row>
         </el-dialog>
+<!-- 修改课程弹窗 -->
+   <el-dialog width=90% title="课程管理/添加课程" :visible.sync="dialogTableVisible">
+          <div class="height_action">请填写课程相关信息</div>
+          <div class="demo-input-suffix">
+            <el-row :gutter="10" padding="30px">
+              <el-col :span="2">
+                <h3>课程名称:</h3>
+              </el-col>
+              <el-col :span="7">
+                <el-input  v-model="change_course.courseName"></el-input>
+              </el-col>
+            </el-row>
 
+            <div class="height_action_leg"></div>
+            <el-row :gutter="10" padding="30px">
+              <el-col :span="2">
+                <h3>课程封面:</h3>
+              </el-col>
+              <el-col :span="7">
+                <el-upload auto-upload=flase limit=1 action="http://106.55.25.94:8080/api/user/modifyHptIos"
+                  :data="transformPhoto"
+                  list-type="picture-card"
+                  :on-preview="handlePictureCardPreview"
+                  :on-remove="handleRemove"
+                  :on-success="transformPhoto2List"
+                  name="headPortrait"
+                  :file-list="show_img"
+                  v-model="photoList">
+                  <i class="el-icon-plus"></i>
+                  <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
+                </el-upload>
+              </el-col>
+            </el-row>
+            <el-row :gutter="10" padding="30px">
+              <el-col :span="2">
+                <h3>课程状态:</h3>
+              </el-col>
+              <el-col :span="7">
+                <div style="height:15px;"></div>
+                <!-- <div ><span >{{ this.change_course.onLine === 1 ? "上线状态" : "下线状态" }}</span></div> -->
+                 <!-- <div style="height:15px;"></div> -->
+                <el-switch
+                  style="display: block"
+                  v-model="change_course.onLine"
+                  active-value=1 
+                  inactive-value=0
+                  active-color="#13ce66"
+                  inactive-color="#ff4949"
+                  active-text="上线状态"
+                  inactive-text="下线状态">
+                </el-switch>
+              </el-col>
+            </el-row>
+            <div class="height_action_leg"></div>
+            <div>
+              <h3>课程相关信息</h3>
+              <div class="weight_action">
+                <el-input type="textarea" :rows="5" v-model="change_course.courseIntro">
+                </el-input>
+              </div>
+            </div>
+            <div class="height_action_leg"></div>
+            <!-- <el-row :gutter="10" padding="30px">
+              <el-col :span="2">
+                <h3>创建人:</h3>
+              </el-col>
+              <el-col :span="7">
+                <el-input placeholder="请输入名字" v-model="action_username_input"></el-input>
+              </el-col>
+            </el-row> -->
+            <el-row :gutter="10" pading="30px" >
+              <el-col :span="3">
+                <h3>添加动作:</h3>
+                 </el-col>
+                <el-col :span="7">
+                        <el-button type="success"  @click="changeActionVisible = true" >添加动作</el-button>
+
+              </el-col>
+            </el-row>
+            <el-row :gutter="10" pading="30px" >
+              <el-col :span="3">
+                <h3>添加分类标签:</h3>
+                 </el-col>
+                <el-col :span="7">
+                        <el-button type="success"  @click="changeClassVisible = true" >添加分类标签</el-button>
+
+              </el-col>
+            </el-row>
+            <div class="height_action_leg"></div>
+            <el-row :gutter="10" padding="30px">
+              <el-col :span="5" :offset="5">
+                <el-button type="success"  @click="updata_course();TableVisible();">立即更新</el-button>
+              </el-col>
+              <el-col :span="5">
+                <el-button @click="dialogTableVisible = false">取消</el-button>
+              </el-col>
+            </el-row>
+          </div>
+        </el-dialog>
+
+  <!-- 修改动作以及标签的分类项 -->
+
+        <el-dialog width=50% title="添加动作" :visible.sync="changeActionVisible">
+          <el-row :gutter="15">
+            <el-col :span="10">
+               <el-input
+                  placeholder="请输入你要搜索的动作"
+                  prefix-icon="el-icon-search"
+                  size="large"
+                  v-model="searchAction">
+              </el-input>
+            </el-col>
+            <el-col :span="1">
+        <el-button type="primary" icon="el-icon-search" @click="getactionList(searchAction,action_page,action_size)">筛选</el-button>
+        </el-col>
+          </el-row>
+
+          <div class="height_action_leg"></div>
+          <el-row :gutter="20">
+            <el-col :span="10" v-for="o in actionList" :key="o" :offset="index > 0 ? 2 : 0" >
+              <el-card :body-style="{ padding: '0px' }">
+                <!-- ljh修改图片类型方便后续修改 -->
+                <el-image :src="o.actionImgs"></el-image>
+                <div style="padding: 14px;">
+                  <span>{{o.actionName}}</span>
+                    <el-button type="text" class="button"
+                    @click="add_action(o)">添加</el-button>
+                </div>
+              </el-card>
+            </el-col>
+          </el-row>
+
+          <el-row>
+            <div class="pagination-container">
+              <el-pagination
+              background
+              layout="prev, pager, next"
+              @current-change="action_CurrentChange"
+              :current-page="action_page"
+              @size-change="getactionList(searchAction,action_page,action_size)"
+              :total="1000">
+              </el-pagination>
+            </div>
+          </el-row>
+
+          <el-row :gutter="10">
+              <h3>已添加动作</h3>
+          </el-row>
+
+          <el-row>
+            <el-col :span="8" v-for="o in added_number" :key="o" :offset="index > 0 ? 2 : 0">
+              <el-card :body-style="{ padding: '0px' }">
+                <!-- ljh修改图片类型 -->
+                <el-image :src="added_actionList[o-1].actionImgs"></el-image>
+                <div style="padding: 14px;">
+                  <span>{{added_actionList[o-1].actionName}}</span>
+                    <el-button type="text" class="button"
+                    @click="delect_action(o-1)">删除</el-button>
+                </div>
+              </el-card>
+            </el-col>
+          </el-row>
+
+          <div class="height_action_leg"></div>
+          <el-row :gutter="10" padding="30px">
+            <el-col :span="5" :offset="5">
+              <el-button type="success" @click="changeActionVisible=false" >确定</el-button>
+            </el-col>
+            <el-col :span="5">
+              <el-button @click="changeActionVisible = false">取消</el-button>
+            </el-col>
+          </el-row>
+
+        </el-dialog>
+
+        <el-dialog width=50% title="添加分类标签" :visible.sync="changeClassVisible" >
+          <el-col v-for="tem in label_List" :key="tem" :offset="index > 0 ? 2 : 0">
+          <el-row :gutter="10" >
+              <h3>{{tem.className}}</h3>
+          </el-row>
+          <el-row :gutter="10">
+              <template>
+                <!-- <el-checkbox-group v-model="ageList"> -->
+                  <el-checkbox  v-model="if_label[tem.idList[tem2-1]]" v-for="tem2 in tem.classNum" :key="tem2" :offset="index > 0 ? 2 : 0">
+                    {{tem.classValue.split(",")[tem2-1]}}</el-checkbox>
+                <!-- </el-checkbox-group> -->
+              </template>
+          </el-row>
+          </el-col>
+
+          <div class="height_action_leg"></div>
+          <el-row :gutter="10" padding="30px">
+            <el-col :span="5" :offset="5">
+              <el-button type="success" @click="changeClassVisible=false">确定</el-button>
+            </el-col>
+            <el-col :span="5">
+              <el-button @click="changeClassVisible = false">取消</el-button>
+            </el-col>
+          </el-row>
+        </el-dialog>
 <!--前端分页 list.slice((page-1)*size,page*size) -->
         <el-table
             v-loading = "listLoading"
@@ -365,7 +565,7 @@
               <template slot-scope="scope">
                 <el-button
                   size="mini"
-                  @click="handleEdit(scope.$index)">编辑</el-button>
+                   @click="dialogTableVisible = true;handleEdit(scope.row);show_imgs()">编辑</el-button>
                 <el-button
                   size="mini"
                   type="danger"
@@ -464,7 +664,7 @@
 
 </style>
 <script>
-import { getList,searchCourse,editCourse,deleteCourse,
+import { getList,searchCourse,editCourse,deleteCourse,updataCourse,
 addCourse } from '@/api/course'
 import { getToken } from '@/utils/auth'
 import { getAction } from '@/api/action'
@@ -481,7 +681,11 @@ export default {
         dialogFormVisible: false,
         addActionVisible:false,
         addClassVisible:false,
+        changeActionVisible:false,
+        changeClassVisible :false,
+        dialogTableVisible:false,
         ageList:[],
+        show_img:[{name:'hhh',url:''}],
         targetList:[],
         standardsList:[],
         specialList:[],
@@ -534,7 +738,17 @@ export default {
         added_actionList:[],//已添加动作列表
         label_List:null,//分类列表
         if_label:[],
-        photoList:[]//
+        photoList:[],//
+        change_course:{
+          courseId:'',
+          courseName:'',
+          backgroundUrl:'',
+          actions:'',
+          counts:'',
+          onLine:1,
+          courseIntro:'',
+          targetAge:'',
+        },
       }
     },
     created() {
@@ -677,7 +891,40 @@ export default {
       },
       delete_course(index){
         deleteCourse(getToken(),index)
-      }
+      },
+      //修改课程
+          show_imgs(){
+       this.show_img[0].url=this.change_course. backgroundUrl;
+       this.show_img[0].name=this.change_course.courseName;
+       console.log(this.show_img[0]. backgroundUrl)
+      },
+      change_imgs(response){
+         this.change_course. backgroundUrl=response.data
+      },
+      handleEdit(row){
+        this.change_course=JSON.parse(JSON.stringify(row));
+      },
+      updata_course(){ 
+        console.log(this.change_course);
+        updataCourse(this.change_course)
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '更新成功!'
+          });
+          
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '更新失败'
+          });
+        });
+        
+      },
+      TableVisible(){
+        this.dialogTableVisible =false;
+      },
+      
     }
   }
 </script>

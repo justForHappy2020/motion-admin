@@ -43,3 +43,10 @@ export function deleteCourseClass(token, courseClassId) {
         }
     })
 }
+export function updataCourseClass(data) {
+    return request({
+        url: '/admin/updataCourseClass',
+        method: 'post',
+        data
+    })
+}

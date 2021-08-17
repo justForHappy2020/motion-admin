@@ -43,3 +43,11 @@ export function addCourse(data) {
         data
     })
 }
+
+export function updataCourse(data) {
+    return request({
+        url: '/admin/updataCourse',
+        method: 'post',
+        data
+    })
+}

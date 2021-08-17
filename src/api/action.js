@@ -37,3 +37,10 @@ export function deleteAction(token, actionId) {
         }
     })
 }
+export function updataAction(data) {
+    return request({
+        url: '/admin/updataAction',
+        method: 'post',
+        data
+    })
+}
