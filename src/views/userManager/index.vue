@@ -8,12 +8,13 @@
           <el-row :gutter="10" >
             <el-col :span="11">注册时间
               <el-date-picker v-model="value_data" type="datetimerange" range-separator="至" start-placeholder="开始日期"
-                end-placeholder="结束日期">
+                end-placeholder="结束日期"
+                value-format="yyyy-MM-dd HH:mm:ss">
               </el-date-picker>
             </el-col>
             <el-col :span="7">
               账户状态
-              <el-select v-model="form.searchType" placeholder="请选择">
+              <el-select v-model="form.searchType" clearable placeholder="请选择">
                 <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-select>
@@ -26,7 +27,7 @@
 
             <el-col :span="1">
               <div>
-                <el-button type="primary" icon="el-icon-search">筛选</el-button>
+                <el-button type="primary" icon="el-icon-search" @click="fetchData">筛选</el-button>
               </div>
             </el-col>
           </el-row>
@@ -48,7 +49,7 @@
             </div>
           </el-col>
         </el-row>
-<!-- 添加用户信息的弹出框 -->
+
         <el-dialog width=90% title="用户管理/添加用户" :visible.sync="dialogFormVisible">
           <div class="height_action">请填写用户相关信息</div>
           <div class="demo-input-suffix">
@@ -108,66 +109,6 @@
             </el-row>
           </div>
         </el-dialog>
-<!-- 修改信息的弹出框 -->
-<el-dialog width=90% title="用户管理/更新用户" :visible.sync="dialogTableVisible"  :data="list" >
-          <div class="height_action">请填写用户相关信息</div>
-          <div class="demo-input-suffix">
-            <el-row :gutter="10" pading="30px">
-              <el-col :span="2">
-                <h3>用户ID:</h3>
-              </el-col>
-              <el-col :span="7">
-                <el-input  v-model="change_user.userId"></el-input>
-              </el-col>
-            </el-row>
-
-            <el-row :gutter="10" pading="30px">
-              <el-col :span="2">
-                <h3>用户昵称:</h3>
-              </el-col>
-              <el-col :span="7">
-                <el-input  v-model="change_user.nickName"></el-input>
-              </el-col>
-            </el-row>
-
-            <el-row :gutter="10" pading="30px">
-              <el-col :span="2">
-                <h3>性别:</h3>
-              </el-col>
-              <el-col :span="7">
-                <el-input  v-model="change_user.gender"><span >{{ this.change_user.gender === 1 ? "计时" : "计次" }}</span ></el-input>
-              </el-col>
-            </el-row>
-
-            <el-row :gutter="10" pading="30px">
-              <el-col :span="2">
-                <h3>手机号:</h3>
-              </el-col>
-              <el-col :span="7">
-                <el-input v-model="change_user.phoneNumber"></el-input>
-              </el-col>
-            </el-row>
-
-            <el-row :gutter="10" pading="30px">
-              <el-col :span="2">
-                <h3>生日:</h3>
-              </el-col>
-              <el-col :span="7">
-                <el-input v-model="change_user.birthday"></el-input>
-              </el-col>
-            </el-row>
-
-            <div class="height_action_leg"></div>
-            <el-row :gutter="10" pading="30px">
-              <el-col :span="5" :offset="5">
-                <el-button type="success" @click="updata_user();TableVisible();">立即更新</el-button>
-              </el-col>
-              <el-col :span="5">
-                <el-button @click="dialogTablemVisible = false">取消</el-button>
-              </el-col>
-            </el-row>
-          </div>
-        </el-dialog>
 
         <el-table v-loading="listLoading" :data="list" border style="width: 100%">
           <el-table-column fixed prop="userId" label="用户ID" width="180">
@@ -195,8 +136,8 @@
 
           <el-table-column label="操作" width="180">
             <template slot-scope="scope">
-              <el-button size="mini" @click="dialogTableVisible = true;handleEdit(scope.row)">编辑</el-button>
-              <el-button size="mini" type="danger" @click="handleDelete(scope.row.userId)">删除</el-button>
+              <el-button size="mini" @click="handleEdit(scope.$index)">编辑</el-button>
+              <el-button size="mini" type="danger" @click="handleDelete(scope.$index)">删除</el-button>
             </template>
           </el-table-column>
 
@@ -250,10 +191,8 @@
 
 <script>
   import {
-    getList,
-    saveUserdata,
+    getList
   } from '@/api/userManager'
-import { getToken } from '@/utils/auth'
 
   export default {
     data() {
@@ -262,37 +201,31 @@ import { getToken } from '@/utils/auth'
         list: [],
         listLoading: true,
         dialogFormVisible: false,
-        dialogTableVisible: false,
         userID:'',
         userName:'',
         userGender:'',
         userPhone:'',
         userBirth:'',
         options: [{
-            value: true,
+            value: 1,
             label: "启用"
           },
           {
-            value: false,
+            value: 0,
             label: "禁用"
           }
         ],
         form: {
           search_userDate: '',
-          search_userKey: ''
+          search_userKey: '',
+          if_ban:null,
+          searchType:null
         },
         selectDelIdx: null,
         page:1 , //当前页
         size:10   ,//每页展示的条数
-        total:null ,  //数据总量
-        change_user:{
-          token:getToken(),
-           userId:'',
-           nickName:'',
-           gender:'',
-           phoneNumber:'',
-           birthday:'',
-        }
+        total:null,   //数据总量
+        value_data:[]
       }
     },
     created() {
@@ -301,7 +234,7 @@ import { getToken } from '@/utils/auth'
     methods: {
       fetchData() {
         this.listLoading = true
-        getList(this.page,this.size).then(response => {
+        getList(this.page,this.size,this.form.searchType,this.value_data[0],this.value_data[1],this.form.search_userKey).then(response => {
           this.list = response.data.userList
           this.type = response.data.userList.type
           this.total = response.data.total
@@ -338,32 +271,7 @@ import { getToken } from '@/utils/auth'
               // console.log(`当前页: ${page}`);
               this.page = page;
               this.fetchData();
-            },
-      //  修改用户    
-       handleEdit(row){
-        this.change_user=JSON.parse(JSON.stringify(row));
-        // console.log(this.change_user)
-      },
-      updata_user(){ 
-        console.log(this.change_user);
-        saveUserdata(this.change_user)
-        .then(() => {
-          this.$message({
-            type: 'success',
-            message: '更新成功!'
-          });
-          
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '更新失败'
-          });
-        });
-        
-      },
-      TableVisible(){
-        this.dialogTableVisible =false;
-      } 
+            }
     }
   }
 </script>
