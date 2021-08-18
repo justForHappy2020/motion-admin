@@ -723,7 +723,7 @@ export default {
           onLine:1,
           courseIntro:'',
           targetAge:'',
-          label:''
+          labels:''
         },
         action_photo_list:['first','seand'],
         photoActionList:{
@@ -878,7 +878,7 @@ export default {
             label.push(t2);
           }
         }
-        this.upload_course.label=label.toString();
+        this.upload_course.labels=label.toString();
         addCourse(this.upload_course);
         this.dialogFormVisible=false;
       },

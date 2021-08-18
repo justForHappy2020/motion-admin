@@ -28,7 +28,7 @@ export function editCourse() {
 export function deleteCourse(token, courseId) {
     return request({
         url: '/admin/deleteCourse',
-        method: 'post',
+        method: 'get',
         params: {
             token: token,
             courseId: courseId
