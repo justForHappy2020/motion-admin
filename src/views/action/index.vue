@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <h1>动作管理</h1>
+    <h1>动作管理{{change_action.actionImg}}</h1>
     <div class="filter-container">
       <span>
         <h3>动作筛选</h3>
@@ -45,7 +45,7 @@
             </div>
           </el-col>
         </el-row>
-
+<!-- 添加动作的弹窗 -->
         <el-dialog width=90% title="动作管理/添加动作" :visible.sync="dialogFormVisible">
           <div class="height_action">请填写动作相关信息</div>
           <div class="demo-input-suffix">
@@ -129,13 +129,95 @@
             </el-row>
           </div>
         </el-dialog>
-
+ <!-- 修改动作的弹窗 -->
+ <el-dialog width=90% title="动作管理/更新动作" :visible.sync="dialogTableVisible" :data="list" >
+          <div class="height_action">请填写动作相关信息</div>
+          <div class="demo-input-suffix">
+            <el-row :gutter="10" padding="30px">
+              <el-col :span="2">
+                <h3 >动作名称:</h3>
+              </el-col>
+              <el-col :span="7">
+                <el-input v-model="change_action.actionName" ></el-input>
+              </el-col>
+            </el-row>
+            <el-row :gutter="10" padding="30px">
+              <el-col :span="2">
+                <h3>动作视频:</h3>
+              </el-col>
+              <el-col :span="7">
+                <el-upload auto-upload=false class="upload-demo" drag=true
+                action="http://106.55.25.94:8080/api/user/modifyHptIos"
+                :data="transformPhoto"
+                :on-success="change_video"
+                name="headPortrait"
+                  multiple>
+                  <i class="el-icon-upload"></i>
+                  <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                </el-upload>
+              </el-col>
+            </el-row>
+            <div class="height_action_leg"></div>
+            <el-row :gutter="10" padding="30px">
+              <el-col :span="2">
+                <h3>动作封面:</h3>
+              </el-col>
+              <el-col :span="7">
+                <el-upload auto-upload=false limit=1 
+                  action="http://106.55.25.94:8080/api/user/modifyHptIos"
+                  :data="transformPhoto"
+                  name="headPortrait"
+                  :on-success="change_imgs" 
+                  list-type="picture-card"
+                  :on-preview="handlePictureCardPreview" :on-remove="handleRemove"
+                  :file-list="show_img">
+                  <i class="el-icon-plus"></i>
+                  <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
+                </el-upload>
+              </el-col>
+            </el-row>
+            <el-row :gutter="10" padding="30px">
+              <el-col :span="2">
+                <h3>动作类型:</h3>
+              </el-col>
+              <el-col :span="7" >
+                <div class="height_action_leg"></div>
+                <div ><span >{{ this.change_action.type === 1 ? "计时" : "计次" }}</span></div>
+                <div class="height_action_leg"></div>
+                 <el-radio-group v-model="change_action.type ">         
+                <el-radio :label="1">计时</el-radio>
+                <el-radio :label="0">计次</el-radio> </el-radio-group> 
+              </el-col>
+            </el-row>
+            <div class="height_action_leg"></div>
+            <div>
+              <h3>动作相关信息</h3>
+              <div class="weight_action">
+                <el-input type="textarea" :rows="5"  v-model="change_action.actionIntro">
+                </el-input>
+              </div>
+            </div>
+            <div class="height_action_leg"></div>
+            <el-row :gutter="10" padding="30px">
+            </el-row>
+            <div class="height_action_leg"></div>
+            <el-row :gutter="10" padding="30px">
+              <el-col :span="5" :offset="5">
+                <el-button type="success" @click="updata_action();TableVisible();">立即更新</el-button>
+              </el-col>
+              <el-col :span="5">
+                <el-button @click="dialogTableVisible=false;TableVisible();">取消</el-button>
+              </el-col>
+            </el-row>
+          </div>
+        </el-dialog>
+        <!-- 编辑动作弹窗结束 -->
         <el-table v-loading="listLoading" :data="list" border style="width: 100%">
           <el-table-column fixed prop="actionId" label="编号" width="150">
           </el-table-column>
           <el-table-column prop="actionName" label="名称" width="130">
           </el-table-column>
-          <el-table-column prop="actionImgs" label="封面" width="120">
+          <el-table-column  prop="actionImgs" label="封面" width="120">
             <template slot-scope="scope">
             　　      <img :src="scope.row.actionImgs" width="40" height="40" />
             </template>
@@ -152,8 +234,8 @@
           </el-table-column>
           <el-table-column label="操作" width="180">
             <template slot-scope="scope">
-              <el-button size="mini" @click="handleEdit(scope.$index)">编辑</el-button>
-              <el-button size="mini" type="danger" @click="handleDelete(scope.$index)">删除</el-button>
+              <el-button size="mini"  @click="dialogTableVisible = true;handleEdit(scope.row);show_imgs()">编辑</el-button>
+              <el-button size="mini" type="danger" @click="handleDelete(scope.row.actionId)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -211,7 +293,10 @@
 
 <script>
   import {
-    getList,insertAction
+    deleteAction,
+    getList,
+    insertAction,
+    updataAction,
   } from '@/api/action'
 import { getToken } from '@/utils/auth'
   export default {
@@ -221,6 +306,7 @@ import { getToken } from '@/utils/auth'
         action_textarea: '',
         action_radio: 1,
         dialogFormVisible: false,
+        dialogTableVisible:false,
         options: [{
           value: 0,
           label: '记次'
@@ -246,10 +332,23 @@ import { getToken } from '@/utils/auth'
           size:0,
           type:0
         },
+        show_img:[{name:'hhh',url:''}],
         transformPhoto:{
           file:null,
           token:getToken()
         },
+         change_action:{
+          actionId:'',
+          actionName:'',
+          actionImgs:'',
+          actionUrl:'',
+          actionIntro:'',
+          restDuration:0,
+          duration:0,
+          size:0,
+          type:0
+        },
+        
       }
     },
     created() {
@@ -276,6 +375,7 @@ import { getToken } from '@/utils/auth'
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+          this.delete_actioni(index);
           this.$message({
             type: 'success',
             message: '删除成功!'
@@ -309,11 +409,51 @@ import { getToken } from '@/utils/auth'
         this.upload_action.actionUrl=response.data
       },
       upload_imgs(response){
-        this.upload_action.actionImgs=response.data
+        this.upload_action.actionImgs=response.data;
+        
       },
       insert_action(){
-        insertAction(this.upload_action)
+        insertAction(this.upload_action);
+        this.dialogFormVisible = false;
+      },
+      delete_actioni(index){
+        deleteAction(getToken(),index)
+      },
+      //修改动作信息
+      show_imgs(){
+       this.show_img[0].url=this.change_action.actionImgs;
+       this.show_img[0].name=this.change_action.actionName;
+      },
+      change_video(response){
+        this.change_action.actionUrl=response.data
+      },
+      change_imgs(response){
+         this.change_action.actionImgs=response.data
+      },
+      handleEdit(row){
+        this.change_action=JSON.parse(JSON.stringify(row));
+      },
+      updata_action(){ 
+        console.log(this.change_action);
+        updataAction(this.change_action)
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '更新成功!'
+          });
+          
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '更新失败'
+          });
+        });
+        
+      },
+      TableVisible(){
+        this.dialogTableVisible =false;
       }
     }
+    
   }
 </script>

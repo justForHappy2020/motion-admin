@@ -49,7 +49,7 @@
             </div>
           </el-col>
         </el-row>
-
+<!-- 添加用户信息的弹出框 -->
         <el-dialog width=90% title="用户管理/添加用户" :visible.sync="dialogFormVisible">
           <div class="height_action">请填写用户相关信息</div>
           <div class="demo-input-suffix">
@@ -109,6 +109,66 @@
             </el-row>
           </div>
         </el-dialog>
+<!-- 修改信息的弹出框 -->
+<el-dialog width=90% title="用户管理/更新用户" :visible.sync="dialogTableVisible"  :data="list" >
+          <div class="height_action">请填写用户相关信息</div>
+          <div class="demo-input-suffix">
+            <el-row :gutter="10" pading="30px">
+              <el-col :span="2">
+                <h3>用户ID:</h3>
+              </el-col>
+              <el-col :span="7">
+                <el-input  v-model="change_user.userId"></el-input>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="10" pading="30px">
+              <el-col :span="2">
+                <h3>用户昵称:</h3>
+              </el-col>
+              <el-col :span="7">
+                <el-input  v-model="change_user.nickName"></el-input>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="10" pading="30px">
+              <el-col :span="2">
+                <h3>性别:</h3>
+              </el-col>
+              <el-col :span="7">
+                <el-input  v-model="change_user.gender"><span >{{ this.change_user.gender === 1 ? "计时" : "计次" }}</span ></el-input>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="10" pading="30px">
+              <el-col :span="2">
+                <h3>手机号:</h3>
+              </el-col>
+              <el-col :span="7">
+                <el-input v-model="change_user.phoneNumber"></el-input>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="10" pading="30px">
+              <el-col :span="2">
+                <h3>生日:</h3>
+              </el-col>
+              <el-col :span="7">
+                <el-input v-model="change_user.birthday"></el-input>
+              </el-col>
+            </el-row>
+
+            <div class="height_action_leg"></div>
+            <el-row :gutter="10" pading="30px">
+              <el-col :span="5" :offset="5">
+                <el-button type="success" @click="updata_user();TableVisible();">立即更新</el-button>
+              </el-col>
+              <el-col :span="5">
+                <el-button @click="dialogTableVisible =false">取消</el-button>
+              </el-col>
+            </el-row>
+          </div>
+        </el-dialog>
 
         <el-table v-loading="listLoading" :data="list" border style="width: 100%">
           <el-table-column fixed prop="userId" label="用户ID" width="180">
@@ -136,8 +196,8 @@
 
           <el-table-column label="操作" width="180">
             <template slot-scope="scope">
-              <el-button size="mini" @click="handleEdit(scope.$index)">编辑</el-button>
-              <el-button size="mini" type="danger" @click="handleDelete(scope.$index)">删除</el-button>
+              <el-button size="mini" @click="dialogTableVisible = true;handleEdit(scope.row)">编辑</el-button>
+              <el-button size="mini" type="danger" @click="handleDelete(scope.row.userId)">禁用</el-button>
             </template>
           </el-table-column>
 
@@ -191,8 +251,11 @@
 
 <script>
   import {
-    getList
+    getList,
+    saveUserdata,
+    banUser,
   } from '@/api/userManager'
+import { getToken } from '@/utils/auth'
 
   export default {
     data() {
@@ -201,6 +264,7 @@
         list: [],
         listLoading: true,
         dialogFormVisible: false,
+        dialogTableVisible: false,
         userID:'',
         userName:'',
         userGender:'',
@@ -224,8 +288,15 @@
         selectDelIdx: null,
         page:1 , //当前页
         size:10   ,//每页展示的条数
-        total:null,   //数据总量
-        value_data:[]
+        total:null ,  //数据总量
+        value_data:[],
+        change_user:{
+           userId:'',
+           nickName:'',
+           gender:'',
+           phoneNumber:'',
+           birthday:'',
+        }
       }
     },
     created() {
@@ -245,19 +316,20 @@
         this.open(index)
       },
       open(index) {
-        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        this.$confirm('此操作将禁用该用户, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+           this.delete_user(index);
           this.$message({
             type: 'success',
-            message: '删除成功!'
+            message: '禁用成功!'
           });
         }).catch(() => {
           this.$message({
             type: 'info',
-            message: '已取消删除'
+            message: '已取消禁用'
           });
         });
       },
@@ -271,7 +343,36 @@
               // console.log(`当前页: ${page}`);
               this.page = page;
               this.fetchData();
-            }
+            },
+      //禁用用户
+      delete_user(index){
+      banUser(getToken(),index)
+      },
+      //  修改用户    
+       handleEdit(row){
+        this.change_user=JSON.parse(JSON.stringify(row));
+        // console.log(this.change_user)
+      },
+      updata_user(){ 
+        console.log(this.change_user);
+        saveUserdata(this.change_user)
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '更新成功!'
+          });
+          
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '更新失败'
+          });
+        });
+        
+      },
+      TableVisible(){
+        this.dialogTableVisible =false;
+      } 
     }
   }
 </script>
