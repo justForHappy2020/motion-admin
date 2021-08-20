@@ -266,6 +266,7 @@ import { getToken } from '@/utils/auth'
         dialogFormVisible: false,
         dialogTableVisible: false,
         userID:'',
+        ok:'',
         userName:'',
         userGender:'',
         userPhone:'',
