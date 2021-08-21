@@ -317,11 +317,13 @@ import { getToken } from '@/utils/auth'
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-           this.delete_user(index);
+          this.delete_user(index);
+          this.fetchData();
           this.$message({
             type: 'success',
             message: '禁用成功!'
           });
+           this.fetchData();
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -342,7 +344,9 @@ import { getToken } from '@/utils/auth'
             },
       //禁用用户
       delete_user(index){
-      banUser(getToken(),index)
+      this.fetchData();
+      banUser(getToken(),index);
+       this.fetchData();
       },
       //  修改用户    
        handleEdit(row){
@@ -351,13 +355,14 @@ import { getToken } from '@/utils/auth'
       },
       updata_user(){ 
         console.log(this.change_user);
+        this.fetchData();
         saveUserdata(this.change_user)
         .then(() => {
           this.$message({
             type: 'success',
             message: '更新成功!'
           });
-          
+           this.fetchData();
         }).catch(() => {
           this.$message({
             type: 'info',
