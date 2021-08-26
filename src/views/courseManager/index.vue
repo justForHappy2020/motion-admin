@@ -473,7 +473,7 @@
           <div class="height_action_leg"></div>
           <el-row :gutter="10" padding="30px">
             <el-col :span="5" :offset="5">
-              <el-button type="success" @click="changeActionVisible=false" >确定</el-button>
+              <el-button type="success" @click="changeActionVisible=false;" >确定</el-button>
             </el-col>
             <el-col :span="5">
               <el-button @click="changeActionVisible = false">取消</el-button>
@@ -884,6 +884,7 @@ export default {
         this.upload_course.labels=label.toString();
         addCourse(this.upload_course);
         this.dialogFormVisible=false;
+        this.fetchData();
       },
       try(){
         var action=new Array();
