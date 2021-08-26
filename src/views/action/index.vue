@@ -367,7 +367,8 @@ import { getToken } from '@/utils/auth'
         })
       },
       handleDelete(index) {
-        this.open(index)
+        this.open(index);
+        
       },
       open(index) {
         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -376,10 +377,12 @@ import { getToken } from '@/utils/auth'
           type: 'warning'
         }).then(() => {
           this.delete_actioni(index);
+            this.fetchData();
           this.$message({
             type: 'success',
             message: '删除成功!'
           });
+            this.fetchData();
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -413,11 +416,15 @@ import { getToken } from '@/utils/auth'
         
       },
       insert_action(){
+         this.fetchData();
         insertAction(this.upload_action);
+         this.fetchData();
         this.dialogFormVisible = false;
+       
       },
       delete_actioni(index){
-        deleteAction(getToken(),index)
+        deleteAction(getToken(),index);
+
       },
       //修改动作信息
       show_imgs(){
@@ -441,17 +448,18 @@ import { getToken } from '@/utils/auth'
             type: 'success',
             message: '更新成功!'
           });
-          
         }).catch(() => {
           this.$message({
             type: 'info',
             message: '更新失败'
           });
+           this.fetchData();
         });
         
       },
       TableVisible(){
         this.dialogTableVisible =false;
+        this.fetchData();
       }
     }
     

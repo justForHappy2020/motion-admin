@@ -780,7 +780,8 @@ export default {
         })
       },
       handleDelete(index) {
-        this.open(index)
+        this.open(index);
+       
       },
       open(index) {
         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -789,10 +790,12 @@ export default {
           type: 'warning'
         }).then(() => {
            this.delete_course(index);
+            this.fetchData();
           this.$message({
             type: 'success',
             message: '删除成功!'
           });
+           this.fetchData();
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -863,7 +866,9 @@ export default {
         this.added_actionList.splice(number,1)
 			},
       insert_course1(){
+          this.fetchData();
           addCourse(this.upload_course);
+          this.fetchData();
       },
       insert_course(){
         
@@ -883,6 +888,7 @@ export default {
         }
         this.upload_course.labels=label.toString();
         addCourse(this.upload_course);
+        this.fetchData();
         this.dialogFormVisible=false;
         this.fetchData();
       },
@@ -910,13 +916,14 @@ export default {
       },
       updata_course(){ 
         console.log(this.change_course);
+         this.fetchData();
         updataCourse(this.change_course)
         .then(() => {
           this.$message({
             type: 'success',
             message: '更新成功!'
           });
-          
+           this.fetchData();
         }).catch(() => {
           this.$message({
             type: 'info',

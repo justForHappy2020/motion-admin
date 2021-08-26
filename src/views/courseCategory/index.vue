@@ -150,7 +150,7 @@
                   <el-button type="success" @click="addCourseClass">确认添加分类项</el-button>
                 </el-col>
                 <el-col :span="5">
-                  <el-button @click="dialogFormVisible = false">取消</el-button>
+                  <el-button @click="dialogFormVisible = false;created();">取消</el-button>
                 </el-col>
               </el-row>
             </div>
@@ -475,11 +475,13 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-           this.delete_course_class(index)
+           this.delete_course_class(index);
+           this.fetchData();
           this.$message({
             type: 'success',
             message: '删除成功!'
           });
+           this.fetchData();
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -523,9 +525,11 @@
       },
       //添加分类组
       addCourseGroup(){
+         this.fetchData();
         addCourseGroupList(this.courseGroup).then(response => {
           alert('上传成功')
         })
+         this.fetchData();
       },
       addCourseClass(){
         for(let t1=0;t1<this.courseClassList.length;t1++){
