@@ -373,6 +373,7 @@ import { getToken } from '@/utils/auth'
       },
       TableVisible(){
         this.dialogTableVisible =false;
+        this.fetchData();
       } 
     }
   }
