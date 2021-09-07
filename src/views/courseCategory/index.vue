@@ -33,7 +33,7 @@
             </el-col>
             <el-col :span="4">
               <div class="grid-content bg-purple-light " style="margin-right:1px;">
-                <el-button type="primary" icon="el-icon-search" @click="dialogFormVisible = true">添加课程分类</el-button>
+                <el-button type="primary" icon="el-icon-search" @click="dialogFormVisible = true;">添加课程分类</el-button>
               </div>
             </el-col>
           </el-row>
