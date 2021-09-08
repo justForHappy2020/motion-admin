@@ -6,24 +6,25 @@
         <h3>动作筛选</h3>
         <el-row :gutter="10">
           <el-col :span="7">动作分类
-            <el-select v-model="value_tpye" placeholder="请选择">
+            <el-select v-model="value_tpye" clearable placeholder="请选择">
               <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled">
               </el-option>
             </el-select>
           </el-col>
           <el-col :span="11">上传时间
             <el-date-picker v-model="value_data" type="datetimerange" range-separator="至" start-placeholder="开始日期"
-              end-placeholder="结束日期">
+              end-placeholder="结束日期"
+              value-format="yyyy-MM-dd HH:mm:ss">
             </el-date-picker>
           </el-col>
           <el-col :span="5">
             <div>
-              <el-input v-model="input" placeholder="请输入动作标题或关键词"></el-input>
+              <el-input v-model="value_str" placeholder="请输入动作标题或关键词"></el-input>
             </div>
           </el-col>
           <el-col :span="1">
             <div>
-              <el-button type="primary" icon="el-icon-search">筛选</el-button>
+              <el-button type="primary" icon="el-icon-search" @click="fetchData">筛选</el-button>
             </div>
           </el-col>
         </el-row>
@@ -205,7 +206,7 @@
                 <el-button type="success" @click="updata_action();TableVisible();">立即更新</el-button>
               </el-col>
               <el-col :span="5">
-                <el-button @click="dialogTableVisible = false">取消</el-button>
+                <el-button @click="dialogTableVisible=false;TableVisible();">取消</el-button>
               </el-col>
             </el-row>
           </div>
@@ -305,17 +306,17 @@ import { getToken } from '@/utils/auth'
         action_textarea: '',
         action_radio: 1,
         dialogFormVisible: false,
-        dialogVisible: false,
         dialogTableVisible:false,
         options: [{
-          value_tpye: '选项1',
-          label: '1'
+          value: 0,
+          label: '记次'
         }, {
-          value_tpye: '选项2',
-          label: '0',
+          value: 1,
+          label: '计时',
         }],
-
-        value_tpye: '',
+        value_tpye: null,
+        value_data: [],
+        value_str: null,
         input: '',
         page:1 , //当前页
         size:10   ,//每页展示的条数
@@ -347,6 +348,7 @@ import { getToken } from '@/utils/auth'
           size:0,
           type:0
         },
+        
       }
     },
     created() {
@@ -358,7 +360,7 @@ import { getToken } from '@/utils/auth'
     methods: {
       fetchData() {
         this.listLoading = true
-        getList(this.page,this.size).then(response => {
+        getList(this.page,this.size,this.value_tpye,this.value_data[0],this.value_data[1],this.value_str).then(response => {
           this.list = response.data.adminActionDtoList
           this.total = response.data.total
           this.listLoading = false

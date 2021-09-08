@@ -7,7 +7,7 @@
           <h3>课程筛选</h3>
           <el-row :gutter="10">
           <el-col :span="7">上线状态
-          <el-select v-model="form.searchOnLine" placeholder="请选择">
+          <el-select v-model="form.searchOnLine" clearable placeholder="请选择">
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -20,7 +20,8 @@
         <el-col :span="11">
           上传时间
            <el-date-picker v-model="value_data" type="datetimerange" range-separator="至" start-placeholder="开始日期"
-             end-placeholder="结束日期">
+             end-placeholder="结束日期"
+             value-format="yyyy-MM-dd HH:mm:ss">
            </el-date-picker>
             </el-col>
 
@@ -29,7 +30,7 @@
         </el-col>
 
         <el-col :span="1">
-        <el-button type="primary" icon="el-icon-search" @click="submit">筛选</el-button>
+        <el-button type="primary" icon="el-icon-search" @click="fetchData">筛选</el-button>
         </el-col>
 
         </el-row>
@@ -699,11 +700,11 @@ export default {
           label: '未上线'
         }],
         form:{
-          searchOnLine:'',
-          searchStartTime:'',
-          searchEndTime:'',
-          searchCreateTime:'',
-          searchCourseKey:''
+          searchOnLine:null,
+          searchStartTime:null,
+          searchEndTime:null,
+          searchCreateTime:null,
+          searchCourseKey:null
         },
         selectDelIdx: null,
         searchAction:'',
@@ -736,7 +737,7 @@ export default {
         action_size:2,//动作大小
         added_number:0,//已添加动作数量
         added_actionList:[],//已添加动作列表
-        label_List:null,//分类列表
+        label_List:[],//分类列表
         if_label:[],
         photoList:[],//
         change_course:{
@@ -749,6 +750,8 @@ export default {
           courseIntro:'',
           targetAge:'',
         },
+        ifonline:null,//是否在线
+        value_data:[]
       }
     },
     created() {
@@ -759,7 +762,7 @@ export default {
     methods:{
       fetchData() {
         this.listLoading = true
-        getList(this.page,this.size).then(response => {
+        getList(this.page,this.size,this.form.searchOnLine,this.value_data[0],this.form.searchEndTime,this.form.searchCourseKey).then(response => {
 
            // var description = "";
            // for(var i in response){

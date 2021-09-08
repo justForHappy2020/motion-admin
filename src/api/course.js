@@ -1,14 +1,18 @@
 import request from '@/utils/request'
 
-export function getList(page, size) {
-    return request({
-        url: '/admin/courseList',
-        method: 'get',
-        params: {
-            page: page,
-            size: size
-        }
-    })
+export function getList(page,size,ifonline,starTime,endTime,searchStr) {
+  return request({
+    url: '/admin/courseList',
+    method: 'get',
+    params:{
+      page:page,
+      size:size,
+      ifOnline:ifonline,
+      starTime:starTime,
+      endTime:endTime,
+      searchStr:searchStr
+      }
+  })
 }
 
 export function searchCourse() {
