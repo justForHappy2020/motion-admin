@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <h1>动作管理{{change_action.actionImg}}</h1>
+    <h1>动作管理</h1>
     <div class="filter-container">
       <span>
         <h3>动作筛选</h3>
@@ -63,7 +63,7 @@
               </el-col>
               <el-col :span="7">
                 <el-upload auto-upload=false class="upload-demo" drag=true
-                action="http://106.55.25.94:8080/api/user/modifyHptIos"
+                action="http://106.55.25.94:8080/api/course/updatavideo"
                 :data="transformPhoto"
                 :on-success="upload_video"
                 name="headPortrait"
@@ -147,7 +147,7 @@
               </el-col>
               <el-col :span="7">
                 <el-upload auto-upload=false class="upload-demo" drag=true
-                action="http://106.55.25.94:8080/api/user/modifyHptIos"
+                action="http://106.55.25.94:8080/api/course/updatavideo"
                 :data="transformPhoto"
                 :on-success="change_video"
                 name="headPortrait"
@@ -409,7 +409,9 @@ import { getToken } from '@/utils/auth'
               this.fetchData();
             },
       upload_video(response){
-        this.upload_action.actionUrl=response.data
+        this.upload_action.actionUrl=response.data.url
+        this.upload_action.size=response.data.size
+        this.upload_action.duration=response.data.duration
       },
       upload_imgs(response){
         this.upload_action.actionImgs=response.data;

@@ -48,7 +48,7 @@
           </el-col>
           <el-col :span="4">
             <div class="grid-content bg-purple-light">
-              <el-button type="primary" icon="el-icon-search" @click="dialogFormVisible = true">添加课程</el-button>
+              <el-button type="primary" icon="el-icon-search" @click="dialogFormVisible = true;">添加课程</el-button>
             </div>
           </el-col>
         </el-row>
@@ -124,7 +124,7 @@
                 <h3>添加动作:</h3>
                  </el-col>
                 <el-col :span="7">
-                        <el-button type="success"  @click="addActionVisible = true" >添加动作</el-button>
+                        <el-button type="success"  @click="addActionVisible = true;" >添加动作</el-button>
 
               </el-col>
             </el-row>
@@ -140,7 +140,7 @@
             <div class="height_action_leg"></div>
             <el-row :gutter="10" padding="30px">
               <el-col :span="5" :offset="5">
-                <el-button type="success" @click="insert_course">立即添加</el-button>
+                <el-button type="success" @click="insert_course;empty();">立即添加</el-button>
               </el-col>
               <el-col :span="5">
                 <el-button @click="dialogFormVisible = false">取消</el-button>
@@ -331,7 +331,7 @@
                   list-type="picture-card"
                   :on-preview="handlePictureCardPreview"
                   :on-remove="handleRemove"
-                  :on-success="transformPhoto2List"
+                  :on-success="transformPhoto2List_change"
                   name="headPortrait"
                   :file-list="show_img"
                   v-model="photoList">
@@ -351,7 +351,7 @@
                 <el-switch
                   style="display: block"
                   v-model="change_course.onLine"
-                  active-value=1 
+                  active-value=1
                   inactive-value=0
                   active-color="#13ce66"
                   inactive-color="#ff4949"
@@ -746,7 +746,7 @@ export default {
           backgroundUrl:'',
           actions:'',
           counts:'',
-          onLine:1,
+          onLine:0,
           courseIntro:'',
           targetAge:'',
         },
@@ -836,6 +836,10 @@ export default {
           console.log(response.data)
         })
       },
+      transformPhoto2List_change(response){
+        console.log(response)
+        this.change_course.backgroundUrl=response.data;
+      },
       //拼接两个语句
       get2str(first,second){
           var url = first+'.'+second;
@@ -913,8 +917,28 @@ export default {
       },
       handleEdit(row){
         this.change_course=JSON.parse(JSON.stringify(row));
+        if (row.onLine==1){
+          this.change_course.onLine="1";
+        }else{
+          this.change_course.onLine="0";
+        }
       },
       updata_course(){ 
+        var action=new Array();
+        var counts=new Array();
+        for(let t1=0;t1<this.added_actionList.length;t1++){
+          action.push(this.added_actionList[t1].actionId)
+          counts.push(1)
+        }
+        this.change_course.actions=action.toString();
+        this.change_course.counts=counts.toString();
+        var label=new Array();
+        for(let t2=0;t2<this.if_label.length;t2++){
+          if(this.if_label[t2]){
+            label.push(t2);
+          }
+        }
+        this.change_course.labels=label.toString();
         console.log(this.change_course);
          this.fetchData();
         updataCourse(this.change_course)
@@ -934,6 +958,23 @@ export default {
       },
       TableVisible(){
         this.dialogTableVisible =false;
+      },
+      empty(){
+        this.upload_course={
+          oken:getToken(),
+          courseName:'',
+          backgroundUrl:'',
+          actions:'',
+          counts:'',
+          onLine:1,
+          courseIntro:'',
+          targetAge:'',
+          labels:''
+        };
+        this.getcourseClass();
+        this.added_actionList=[];
+        this.added_number=0;
+        this.if_label=[];
       },
       
     }
