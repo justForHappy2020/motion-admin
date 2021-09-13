@@ -44,9 +44,11 @@
   // import {
   //   validUsername
   // } from '@/utils/validate'
+
   import{
     getCode
   }from '@/api/user'
+import { getToken } from '@/utils/auth'
 
   export default {
     name: 'Login',
@@ -69,6 +71,20 @@
         }
       }
       return {
+        //  usedata:{
+        // userld:0,
+        // phoneNumber:'',
+        // nickName:'',
+        // headPortrait:'',
+        // type:0,
+        // password:'',
+        // token:getToken(),
+        // gender :0,
+        // intro:'',
+        // birthday:'',
+        // createTime:'',
+        // },
+        code:0,
         loginForm: {
           phoneNumber: '',
           code: ''
@@ -100,6 +116,9 @@
         immediate: true
       }
     },
+    //   created() {
+    //   this.judglogin()
+    // },
     methods: {
       // showPwd() {
       //   if (this.passwordType === 'password') {
@@ -130,11 +149,20 @@
           }
         })
       },
+      //验证token
+      // judglogin(){
+      //  
+      //     this.usedata=response.data})
+        
+      // },
       //请求发送验证码
-      getCode() {
+      getCode() { 
+        // login(getToken()).then(response=>{
+        //   console.log(response.data)});
           this.codeWaitTime();
           getCode(this.loginForm).then(response => {
             this.loginForm.code = response.data;
+             console.log(response.data);
             console.log(this.loginForm.code)
           })
       },
