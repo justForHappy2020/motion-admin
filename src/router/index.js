@@ -30,107 +30,112 @@ import Layout from '@/layout'
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
-export const constantRoutes = [
-  
-  {
-    path: '/login',
-    component: () => import('@/views/login/index'),
-    hidden: true
-  },
-  {
-    path: '/404',
-    component: () => import('@/views/404'),
-    hidden: true
-  },
-  {
-    path: '/',
-    component: Layout,
-    redirect: '/dashboard',
-    children: [{
-      path: 'dashboard',
-      name: 'Dashboard',
-      component: () => import('@/views/dashboard/index'),
-      meta: {
-        title: '首页',
-        icon: 'dashboard'
-      }
-    }]
-  },
-  {
-    path: '/course',
-    component: Layout,
-    children: [{
-      path: 'index',
-      name: 'course',
-      component: () => import('@/views/courseManager/index'),
-      meta: {
-        title: '课程管理',
-        icon: 'el-icon-collection'
-      }
-    }]
-  },
-  {
-    path: '/courseCategory',
-    component: Layout,
-    children: [{
-      path: 'index',
-      name: 'courseCategory',
-      component: () => import('@/views/courseCategory/index'),
-      meta: {
-        title: '课程分类管理',
-        icon: 'el-icon-collection'
-      }
-    }]
-  },
-  {
-    path: '/userManager',
-    component: Layout,
-    children: [{
-      path: 'index',
-      name: 'userManager',
-      component: () => import('@/views/userManager/index'),
-      meta: {
-        title: '用户管理',
-        icon: 'el-icon-collection'
-      }
-    }],
-  },
-  {
-    path: '/action',
-    component: Layout,
-    redirect: '/dashboard',
-    children: [{
-      path: 'index',
-      name: 'action',
-      component: () => import('@/views/action/index'),
-      meta: {
-        title: '动作管理',
-        icon: 'el-icon-collection'
-      }
-    }]
-  },
-  // 404 page must be placed at the end !!!
-  {
-    path: '*',
-    redirect: '/404',
-    hidden: true
-  }
+export const constantRoutes = [{
+        path: '/login',
+        component: () =>
+            import ('@/views/login/index'),
+        hidden: true
+    },
+    {
+        path: '/404',
+        component: () =>
+            import ('@/views/404'),
+        hidden: true
+    },
+    {
+        path: '/',
+        component: Layout,
+        redirect: '/dashboard',
+        children: [{
+            path: 'dashboard',
+            name: 'Dashboard',
+            component: () =>
+                import ('@/views/dashboard/index'),
+            meta: {
+                title: '首页',
+                icon: 'dashboard'
+            }
+        }]
+    },
+    {
+        path: '/course',
+        component: Layout,
+        children: [{
+            path: 'index',
+            name: 'course',
+            component: () =>
+                import ('@/views/courseManager/index'),
+            meta: {
+                title: '课程管理',
+                icon: 'el-icon-collection'
+            }
+        }]
+    },
+    {
+        path: '/courseCategory',
+        component: Layout,
+        children: [{
+            path: 'index',
+            name: 'courseCategory',
+            component: () =>
+                import ('@/views/courseCategory/index'),
+            meta: {
+                title: '课程分类管理',
+                icon: 'el-icon-collection'
+            }
+        }]
+    },
+    {
+        path: '/userManager',
+        component: Layout,
+        children: [{
+            path: 'index',
+            name: 'userManager',
+            component: () =>
+                import ('@/views/userManager/index'),
+            meta: {
+                title: '用户管理',
+                icon: 'el-icon-collection'
+            }
+        }],
+    },
+    {
+        path: '/action',
+        component: Layout,
+        redirect: '/dashboard',
+        children: [{
+            path: 'index',
+            name: 'action',
+            component: () =>
+                import ('@/views/action/index'),
+            meta: {
+                title: '动作管理',
+                icon: 'el-icon-collection'
+            }
+        }]
+    },
+    // 404 page must be placed at the end !!!
+    {
+        path: '*',
+        redirect: '/404',
+        hidden: true
+    }
 ]
 
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
-  scrollBehavior: () => ({
-    y: 0
-  }),
-  routes: constantRoutes
+    // mode: 'history', // require service support
+    scrollBehavior: () => ({
+        y: 0
+    }),
+    routes: constantRoutes
 })
 
 const router = createRouter()
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
-  const newRouter = createRouter()
-  router.matcher = newRouter.matcher // reset router
+    const newRouter = createRouter()
+    router.matcher = newRouter.matcher // reset router
 }
 
 export default router

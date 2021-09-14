@@ -48,3 +48,12 @@ export function updataAction(data) {
         data
     })
 }
+export function getDeletInfo(data) {
+    return request({
+        url: '/admin/getDelectActionToCourse',
+        method: 'get',
+        params:{
+            actionId:data
+        }
+    })
+}

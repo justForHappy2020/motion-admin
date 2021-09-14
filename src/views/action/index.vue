@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <h1>动作管理</h1>
+    <h1>动作管理{{courseList}}</h1>
     <div class="filter-container">
       <span>
         <h3>动作筛选</h3>
@@ -212,6 +212,40 @@
           </div>
         </el-dialog>
         <!-- 编辑动作弹窗结束 -->
+
+        <el-dialog width=70% title="删除提示" :visible.sync="courseVisible" >
+            <h2>删除该动作将影响一下课程:{{index}}</h2>
+            <el-table :data="courseList" stripe style="width: 100%" height="350">
+              <el-table-column
+                prop="courseId"
+                label="ID"
+                width="300">
+              </el-table-column>
+              <el-table-column
+                prop="courseName"
+                label="名称"
+                width="300">
+              </el-table-column>
+              <el-table-column
+                prop="actions"
+                label="原动作ID"
+                width="300">
+              </el-table-column>
+            </el-table>
+            <h2>此操作将永久删除该文件, 是否继续?</h2>
+            <el-row :gutter="10" padding="30px">
+              <el-col :span="6" :offset="4">
+                <el-button type="primary" @click="delete_actioni(index);">确定</el-button>
+              </el-col>
+              <el-col :span="6" :offset="6"><el-button @click="courseVisible= false;
+              this.$message({
+             type: 'info',
+             message: '已取消删除'});
+            ">取消</el-button></el-col>
+              
+            </el-row>
+        </el-dialog>
+
         <el-table v-loading="listLoading" :data="list" border style="width: 100%">
           <el-table-column fixed prop="actionId" label="编号" width="150">
           </el-table-column>
@@ -297,6 +331,7 @@
     getList,
     insertAction,
     updataAction,
+    getDeletInfo,
   } from '@/api/action'
 import { getToken } from '@/utils/auth'
   export default {
@@ -348,7 +383,10 @@ import { getToken } from '@/utils/auth'
           size:0,
           type:0
         },
-        
+        courseList:[],
+        string:"",
+        courseVisible:false,
+        index:0
       }
     },
     created() {
@@ -371,24 +409,40 @@ import { getToken } from '@/utils/auth'
         
       },
       open(index) {
-        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.delete_actioni(index);
-            this.fetchData();
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
-            this.fetchData();
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });
-        });
+        getDeletInfo(index).then(response=>{
+          this.courseList=response.data;
+        })
+        this.courseVisible=true;
+        this.index=index;
+        // this.delete_actioni(index);
+        //     this.fetchData();
+        //   this.$message({
+        //     type: 'success',
+        //     message: '删除成功!'
+        // this.string="<strong><p>如果删除此动作将影响下列课程:"
+        // for(o in courseList){
+        //   this.string=this.string+"<br/>"+o.courseId+" "+o.courseName+"</p></strong>"
+        // }
+          // this.string=this.string+"<br/>"+"此操作将永久删除该文件, 是否继续?"+"</p>"
+        // this.$alert( this.string, '提示', {
+        //   dangerouslyUseHTMLString: true,
+        //   confirmButtonText: '确定',
+        //   cancelButtonText: '取消',
+        //   type: 'warning'
+        // }).then(() => {
+        //   this.delete_actioni(index);
+        //     this.fetchData();
+        //   this.$message({
+        //     type: 'success',
+        //     message: '删除成功!'
+        //   });
+        //     this.fetchData();
+        // }).catch(() => {
+        //   this.$message({
+        //     type: 'info',
+        //     message: '已取消删除'
+        //   });
+        // });
       },
       open_new() {
         this.$alert('<div><h2>课程筛选</h2></div>', '添加动作', {
@@ -426,7 +480,10 @@ import { getToken } from '@/utils/auth'
       },
       delete_actioni(index){
         deleteAction(getToken(),index);
-
+        this.$message({
+            type: 'success',
+            message: '删除成功!'
+        })
       },
       //修改动作信息
       show_imgs(){
