@@ -40,7 +40,7 @@
           </el-col>
           <el-col :span="4">
             <div class="grid-content bg-purple-light">
-              <el-button type="primary" icon="el-icon-search" @click="dialogFormVisible = true">添加动作</el-button>
+              <el-button type="primary" icon="el-icon-search" @click="dialogFormVisible = true,disabled=true">添加动作</el-button>
             </div>
           </el-col>
         </el-row>
@@ -120,7 +120,8 @@
             <div class="height_action_leg"></div>
             <el-row :gutter="10" padding="30px">
               <el-col :span="5" :offset="5">
-                <el-button type="success" @click="insert_action">立即添加</el-button>
+                <el-button type="success" @click="insert_action" :disabled="disabled">立即添加</el-button>
+                <!-- <el-button type="success" @click="disabledChange">修改</el-button> -->
               </el-col>
               <el-col :span="5">
                 <el-button @click="dialogFormVisible = false">取消</el-button>
@@ -302,6 +303,7 @@ import { getToken } from '@/utils/auth'
     data() {
       return {
         list: [],
+        disabled:true,
         action_textarea: '',
         action_radio: 1,
         dialogFormVisible: false,
@@ -408,9 +410,11 @@ import { getToken } from '@/utils/auth'
             },
       upload_video(response){
         this.upload_action.actionUrl=response.data
+        this.disabled=false;
       },
       upload_imgs(response){
         this.upload_action.actionImgs=response.data;
+       this.disabled=false;
         
       },
       insert_action(){
@@ -458,6 +462,9 @@ import { getToken } from '@/utils/auth'
       TableVisible(){
         this.dialogTableVisible =false;
         this.fetchData();
+      },
+      disabledChange(){
+        this.disabled=true
       }
     }
     

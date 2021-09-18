@@ -56,7 +56,7 @@ router.beforeEach(async(to, from, next) => {
                 try {
                     // get user info 
                     console.log('1')
-                        // await store.dispatch('user/login')
+                    await store.dispatch('user/login')
                     next()
                 } catch (error) {
                     console.log('2')

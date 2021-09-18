@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-container">
-  <!-- <div class="dashboard-text">{{this.$store.state.usedata.nickName}},欢迎回来！</div> -->
-    <div class="dashboard-text">{{this.usedata.nickName}},欢迎回来！</div>
+  <div class="dashboard-text">{{this.$store.state.usedata.nickName}},欢迎回来！</div>
+    <!-- <div class="dashboard-text">{{this.usedata.nickName}},欢迎回来！</div> -->
   </div>
 </template>
 
@@ -31,10 +31,10 @@ export default {
         
       }
     },
-     created() {
-        this.fetchData()
-        console.log('HHH')
-    },
+    //  created() {
+    //     this.fetchData()
+    //     console.log('HHH')
+    // },
     methods: {
         fetchData() {
           this.loading = true
