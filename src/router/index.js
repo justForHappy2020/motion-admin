@@ -114,6 +114,20 @@ export const constantRoutes = [{
             }
         }]
     },
+    {
+        path: '/feedback',
+        component: Layout,
+        children: [{
+            path: 'index',
+            name: 'feedback',
+            component: () =>
+                import ('@/views/feedback/index'),
+            meta: {
+                title: '反馈管理',
+                icon: 'el-icon-collection'
+            }
+        }],
+    },
     // 404 page must be placed at the end !!!
     {
         path: '*',
