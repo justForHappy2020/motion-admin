@@ -6,7 +6,7 @@
         <h3>反馈筛选</h3>
         <el-row :gutter="10">
           <el-col :span="7">反馈分类
-            <el-select v-model="value_tpye" placeholder="请选择">
+            <el-select v-model="value_type" placeholder="请选择">
               <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled">
               </el-option>
             </el-select>
@@ -131,7 +131,7 @@
               </el-col>
               <el-col :span="5" >
                 <div style="height:15px"></div>
-                <div ><span >{{ this.feedbacks.ifSolve=== 1 ? "已解决" : "未解决" }}</span></div>
+                <div ><span >{{ feedbacks.ifSolve=== 1 ? "已解决" : "未解决" }}</span></div>
                 <!-- <div class="height_action_leg"></div>
                  <el-radio-group v-model="feedbacks.ifSolve ">         
                 <el-radio :label="1">已解决</el-radio>
@@ -148,7 +148,23 @@
                
               </el-col>
             </el-row>
-         
+           <div class="height_action_leg"></div>
+            <div>
+              <h3>填写回复</h3>
+              <div class="weight_action">
+                <el-input type="textarea" :rows="5"  v-model="userfeedback.answer">
+                </el-input>
+              </div>
+            </div>
+            <div class="height_action_leg"></div>
+              <el-row :gutter="10" padding="30px">
+              <el-col :span="5" :offset="5">
+                <el-button type="success" @click="reply();FormVisible();">完成回复</el-button>
+              </el-col>
+              <el-col :span="5">
+                <el-button @click="dialogFormVisible = false">取消</el-button>
+              </el-col>
+            </el-row>
           </div>
         </el-dialog> 
 <!-- 反馈详情弹窗完毕 -->
@@ -171,9 +187,11 @@
           </el-table-column>
           <el-table-column prop="ifSolve" label="解决与否" width="130">
           </el-table-column>
+           <el-table-column prop="reply" label="回复" width="130">
+          </el-table-column>
           <el-table-column label="操作" width="130">
             <template slot-scope="scope">
-              <el-button size="mini"  @click="dialogFormVisible = true;handleEdit(scope.row);show_imgs()">查看详情</el-button>
+              <el-button size="mini"  @click="dialogFormVisible = true;handleEdit(scope.row); feedbackId()">查看详情</el-button>
               <!-- <el-button size="mini" type="danger" @click="handleDelete(scope.row.feedbackId)">删除</el-button> -->
             </template>
           </el-table-column>
@@ -230,7 +248,7 @@
 
 <script>
   import {
-  getUserFeedback,getFeedback,sendFeedback
+  getUserFeedback,getFeedback,sendFeedback,saveUserFeedback
   } from '@/api/feedback'
 import { getToken } from '@/utils/auth'
   export default {
@@ -242,15 +260,15 @@ import { getToken } from '@/utils/auth'
         total:null,   //数据总量
         dialogFormVisible: false,
         dialogTableVisible: false,
-      options: [{
+        options: [{
           value_tpye: '选项1',
           label: '0'
         }, {
           value_tpye: '选项2',
           label: '1',
         }],
-      feedbacks:{
-          feedbackId:0,
+       feedbacks:{
+          feedbackId:null,
           userld:0,
           content:'',
           picUrls:'',
@@ -264,11 +282,16 @@ import { getToken } from '@/utils/auth'
           feedbackQQ:'',
           feedbackImg:''
         },
+        userfeedback:{
+          feedbackId:null, 
+          answer:'',
+        }
       }
     },
     created() {
       this.fetchData()
       this. fetchMydata() 
+     
     },
     submitUpload() {
       this.$refs.upload.submit();
@@ -299,22 +322,43 @@ import { getToken } from '@/utils/auth'
     fetchMydata() {
         this.listLoading = true
         getFeedback(getToken(),this.page,this.size).then(response => {
-          console.log(response.data)
            this.list = response.data.myFeedbackList
            this.listLoading = false
         })
+        
+           this.fetchData();
       },
     handleEdit(row){
         this.feedbacks=JSON.parse(JSON.stringify(row));
       },
     sendFeed(){
       sendFeedback(this.sendFeedbacks).then(response=>{
-        console.log(response)
-        console.log(this.sendFeedbacks)
+        // console.log(response)
+        // console.log(this.sendFeedbacks)
         this.dialogTableVisible = false
          this.fetchData()
       })
     },
+    feedbackId(){
+      console.log(this.feedbacks.feedbackId)
+      this.userfeedback.feedbackId= this.feedbacks.feedbackId
+
+    },
+    reply(){
+      console.log(this.userfeedback)
+      saveUserFeedback(this.userfeedback.feedbackId,this.userfeedback.answer).then(response => {
+          response.data.ifSolve=1
+          this.feedbacks.ifSolve= response.data.ifSolve
+          this.userfeedback.answer=response.data.reply
+          console.log(this.feedbacks.ifSolve)
+          // console.log(response) 
+        })
+        this.fetchData();
+    },
+     FormVisible(){
+        this.dialogFormVisible=false,
+        this.fetchData();
+      },
     }
     
   }

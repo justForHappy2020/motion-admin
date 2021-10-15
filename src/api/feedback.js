@@ -27,3 +27,13 @@ export function sendFeedback(data) {
         data
     })
 }
+export function saveUserFeedback(feedbackId, answer) {
+    return request({
+        url: '/admin/saveUserFeedback',
+        method: 'get',
+        params: { 
+            feedbackId:  feedbackId,
+            answer: answer
+        }
+    })
+}
