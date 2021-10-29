@@ -15,6 +15,11 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // permission control
 
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
+// 使用 mavonEditor
+Vue.use(mavonEditor)
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -30,14 +35,14 @@ import '@/permission' // permission control
 
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })
-// 如果想要中文版 element-ui，按如下方式声明
-// Vue.use(ElementUI)
+    // 如果想要中文版 element-ui，按如下方式声明
+    // Vue.use(ElementUI)
 
 Vue.config.productionTip = false
 
 new Vue({
-  el: '#app',
-  router,
-  store,
-  render: h => h(App)
+    el: '#app',
+    router,
+    store,
+    render: h => h(App)
 })

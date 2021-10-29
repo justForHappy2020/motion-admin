@@ -30,6 +30,7 @@ import Layout from '@/layout'
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
+// 默认路由
 export const constantRoutes = [{
         path: '/login',
         component: () =>
@@ -128,6 +129,48 @@ export const constantRoutes = [{
             }
         }],
     },
+    {
+        path: '/articleAdminManager',
+        component: Layout,
+        children: [{
+            path: 'index',
+            name: 'articleAdminManage',
+            component: () =>
+                import ('@/views/articleAdminManager/index'),
+            meta: {
+                title: '管理员文章管理',
+                icon: 'el-icon-collection'
+            }
+        }],
+    },
+    {
+        path: '/articleUserManager',
+        component: Layout,
+        children: [{
+            path: 'index',
+            name: 'articleUserManage',
+            component: () =>
+                import ('@/views/articleUserManager/index'),
+            meta: {
+                title: '用户文章管理',
+                icon: 'el-icon-collection'
+            }
+        }],
+    },
+    {
+        path: '/publish',
+        component: Layout,
+        children: [{
+            path: 'index',
+            name: 'publish',
+            component: () =>
+                import ('@/views/publish/index'),
+            meta: {
+                title: '发布文章',
+                icon: 'el-icon-collection'
+            }
+        }],
+    },
     // 404 page must be placed at the end !!!
     {
         path: '*',
@@ -136,6 +179,38 @@ export const constantRoutes = [{
     }
 ]
 
+export const addRouter = [{
+        path: '/publish',
+        component: Layout,
+        children: [{
+            path: 'index',
+            name: 'publish',
+            component: () =>
+                import ('@/views/publish/index'),
+            meta: {
+                title: '发布文章',
+                icon: 'el-icon-collection',
+                role: ['user']
+            }
+        }],
+    },
+    {
+        path: '/articleAdminManager',
+        component: Layout,
+        children: [{
+            path: 'index',
+            name: 'articleAdminManage',
+            component: () =>
+                import ('@/views/articleAdminManager/index'),
+            meta: {
+                title: '管理员文章管理',
+                icon: 'el-icon-collection',
+                role: ['admin']
+            }
+        }],
+    },
+
+]
 const createRouter = () => new Router({
     // mode: 'history', // require service support
     scrollBehavior: () => ({
