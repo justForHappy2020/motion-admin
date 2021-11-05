@@ -171,6 +171,20 @@ export const constantRoutes = [{
             }
         }],
     },
+    {
+        path: '/navigation',
+        component: Layout,
+        children: [{
+            path: 'index',
+            name: 'navigation',
+            component: () =>
+                import ('@/views/navigation/index'),
+            meta: {
+                title: '首页导航管理',
+                icon: 'el-icon-collection'
+            }
+        }],
+    },
     // 404 page must be placed at the end !!!
     {
         path: '*',
