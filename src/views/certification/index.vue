@@ -1,36 +1,64 @@
 <template>
   <div class="app-container">
-    <h1>首页导航管理{{change_action.actionImg}}</h1>
+    <h1>认证申请管理{{change_action.actionImg}}</h1>
+     <div class="filter-container">
+        <span>
+          <h3>申请筛选</h3>
+          <el-row :gutter="10">
+          <el-col :span="7">上线状态
+          <el-select placeholder="请选择">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-col>
+
+        <el-col :span="11">
+          申请时间
+           <el-date-picker  type="datetimerange" range-separator="至" start-placeholder="开始日期"
+             end-placeholder="结束日期">
+           </el-date-picker>
+            </el-col>
+
+        <el-col :span="5">
+          <el-input  placeholder="请输入用户昵称"></el-input>
+        </el-col>
+
+        <el-col :span="1">
+        <el-button type="primary" icon="el-icon-search" @click="submit">筛选</el-button>
+        </el-col>
+
+        </el-row>
+        </span>
+      </div>
+
     <div class="filter-container">
       <span>
         <el-row :gutter="24">
           <el-col :span="20">
             <div class="grid-content bg-purple">
-              <h3><strong>导航列表</strong></h3>
-            </div>
-          </el-col>
-          <el-col :span="4">
-            <div class="grid-content bg-purple-light">
-              <el-button type="primary" icon="el-icon-search" @click="dialogFormVisible = true,disabled=true">添加导航</el-button>
+              <h3><strong>申请列表</strong></h3>
             </div>
           </el-col>
         </el-row>
-<!-- 添加动作的弹窗 -->
-        <el-dialog width=90% title="首页导航管理/添加快速导航" :visible.sync="dialogFormVisible">
-          <div class="height_action">请填写轮播图相关信息</div>
+     <!-- 添加动作的弹窗 -->
+        <el-dialog width=90% title="审核认证" :visible.sync="dialogFormVisible">
+          <div class="height_action">请审核用户提交的资料</div>
           <div class="demo-input-suffix">
             <el-row :gutter="10" padding="30px">
               <el-col :span="2">
-                <h3>导航名称:</h3>
+                <h3>真实姓名:</h3>
               </el-col>
               <el-col :span="7">
-                <el-input placeholder="请输入导航名称" v-model="upload_action.actionName"></el-input>
               </el-col>
             </el-row>
             <div class="height_action_leg"></div>
             <el-row :gutter="10" padding="30px">
               <el-col :span="2">
-                <h3>课程图案:</h3>
+                <h3>手机号码:</h3>
               </el-col>
               <el-col :span="7">
                 <el-upload auto-upload=false limit=1 
@@ -47,72 +75,49 @@
             </el-row>
             <el-row :gutter="10" padding="30px">
               <el-col :span="2">
-                <h3>导航说明:</h3>
+                <h3>手机号码:</h3>
               </el-col>
                  <div class="height_action_leg"></div>
-              <el-col :span="7">
-                <el-input placeholder="请输入轮播图说明" v-model="upload_action.actionName"></el-input>
-              </el-col>
             </el-row>
             <div class="height_action_leg"></div>
            <el-row :gutter="10" padding="30px">
               <el-col :span="3">
-                <h3>跳转后的课程列表:</h3>
+                <h3>证件号码:</h3>
               </el-col>
-              <el-col :span="7">
-   <!-- TIANJAI？????              -->
-                 <el-button type="success" @click="dialogFormVisible = false">添加课程</el-button>
-              </el-col>
-            </el-row>
-            <div class="height_action_leg"></div>
+           </el-row>
             <el-row :gutter="10" padding="30px">
-              <!-- <el-col :span="2">
-                <h3>创始人名称:</h3>
+              <el-col :span="3">
+                <h3>机构或组织:</h3>
+
+              </el-col> 
+           </el-row>
+            <el-row :gutter="10" padding="30px">
+              <el-col :span="3">
+                <h3>职称或称号:</h3>
               </el-col>
-              <el-col :span="7">
-                <el-input placeholder="请输入内容" v-model="action_username_input"></el-input>
-              </el-col> -->
-            </el-row>
-            <div class="height_action_leg"></div>
+           </el-row>
 
-          <div class="height_action_leg"></div>
-          <el-row :gutter="20">
-            <el-col :span="10" v-for="o in actionList" :key="o" :offset="index > 0 ? 2 : 0" >
-              <el-card :body-style="{ padding: '0px' }">
-                <!-- ljh修改图片类型方便后续修改 -->
-                <el-image :src="o.actionImgs"></el-image>
-                <div style="padding: 14px;">
-                  <span>{{o.actionName}}</span>
-                    <el-button type="text" class="button"
-                    @click="add_action(o)">添加</el-button>
-                </div>
-              </el-card>
-            </el-col>
-          </el-row>
-
-          <el-row>
-            <div class="pagination-container">
-              <el-pagination
-              background
-              layout="prev, pager, next"
-              @current-change="action_CurrentChange"
-              :current-page="action_page"
-              @size-change="getactionList(searchAction,action_page,action_size)"
-              :total="1000">
-              </el-pagination>
-            </div>
-          </el-row>
-
-
-        
-
+           <el-row :gutter="10" padding="30px">
+              <el-col :span="3">
+                <h3>认证说明:</h3>  
+              </el-col>
+           </el-row>
+              <div class="weight_action">
+                <el-input type="textarea" :rows="5">
+                </el-input>
+              </div>
+            <el-row :gutter="10" padding="30px">
+              <el-col :span="3">
+                <h3>认证材料:</h3>  
+              </el-col>
+           </el-row>
             <el-row :gutter="10" padding="30px">
               <el-col :span="5" :offset="5">
-                <el-button type="success" @click="insert_action" :disabled="disabled">立即添加</el-button>
+                <el-button type="success" @click="insert_action" :disabled="disabled">同意申请</el-button>
                 <!-- <el-button type="success" @click="disabledChange">修改</el-button> -->
               </el-col>
               <el-col :span="5">
-                <el-button @click="dialogFormVisible = false">取消</el-button>
+                <el-button type="danger" @click="dialogFormVisible = false">拒绝申请</el-button>
               </el-col>
             </el-row>
           </div>
@@ -122,25 +127,29 @@
   
         <!-- 添加课程 -->
         <el-table v-loading="listLoading" :data="list" border style="width: 100%">
-          <el-table-column fixed prop="" label="编号" width="150">
+          <el-table-column fixed prop="" label="用户ID" width="150">
           </el-table-column>
-          <el-table-column prop="" label="名称" width="130">
+          <el-table-column prop="" label="用户昵称" width="130">
           </el-table-column>
-          <el-table-column  prop="" label="图案" width="120">
+          <el-table-column  prop="" label="手机号" width="120">
             <template slot-scope="scope">
             <!-- 　　      <img :src="scope.row.actionImgs" width="40" height="40" /> -->
             </template>
           </el-table-column>
         
-          <el-table-column prop="" label="说明" width="130">
+          <el-table-column prop="" label="申请次数" width="130">
           </el-table-column>
-          <el-table-column prop="" label="创建人" width="130">
+          <el-table-column prop="" label="申请时间" width="130">
           </el-table-column>
-          <el-table-column prop="" label="添加时间" width="130">
+          <el-table-column prop="" label="审核结果" width="130">
+              同意/拒绝
+          </el-table-column>
+           <el-table-column prop="" label="审核状态" width="130">
+              已审核/未审核
           </el-table-column>
           <el-table-column label="操作" width="180">
             <template slot-scope="scope">
-              <el-button size="mini"  @click="dialogTableVisible = true;handleEdit(scope.row);show_imgs()">编辑</el-button>
+              <el-button size="mini"  @click="dialogFormVisible = true;handleEdit(scope.row);show_imgs()">审核</el-button>
               <el-button size="mini" type="danger" @click="handleDelete(scope.row.actionId)">删除</el-button>
             </template>
           </el-table-column>
@@ -159,8 +168,9 @@
         </div>
 
       </span>
-    </div>
-  </div>
+     </div>
+s </div>
+  
 </template>
 
 <style>

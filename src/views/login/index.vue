@@ -71,19 +71,6 @@ import { getToken } from '@/utils/auth'
         }
       }
       return {
-        //  usedata:{
-        // userld:0,
-        // phoneNumber:'',
-        // nickName:'',
-        // headPortrait:'',
-        // type:0,
-        // password:'',
-        // token:getToken(),
-        // gender :0,
-        // intro:'',
-        // birthday:'',
-        // createTime:'',
-        // },
         code:0,
         loginForm: {
           phoneNumber: '',
@@ -116,20 +103,7 @@ import { getToken } from '@/utils/auth'
         immediate: true
       }
     },
-    //   created() {
-    //   this.judglogin()
-    // },
     methods: {
-      // showPwd() {
-      //   if (this.passwordType === 'password') {
-      //     this.passwordType = ''
-      //   } else {
-      //     this.passwordType = 'password'
-      //   }
-      //   this.$nextTick(() => {
-      //     this.$refs.password.focus()
-      //   })
-      // },
       handleLogin() {
         this.$refs.loginForm.validate(valid => {
           if (valid) {
@@ -162,8 +136,8 @@ import { getToken } from '@/utils/auth'
           this.codeWaitTime();
           getCode(this.loginForm).then(response => {
             this.loginForm.code = response.data;
-             console.log(response.data);
-            console.log(this.loginForm.code)
+             console.log(response.data);//null
+            console.log(this.loginForm.code)//null
           })
       },
       //验证码倒计时

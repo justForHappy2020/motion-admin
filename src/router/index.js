@@ -68,7 +68,7 @@ export const constantRoutes = [{
                 import ('@/views/courseManager/index'),
             meta: {
                 title: '课程管理',
-                icon: 'el-icon-collection'
+                icon: 'el-icon-s-management'
             }
         }]
     },
@@ -82,7 +82,7 @@ export const constantRoutes = [{
                 import ('@/views/courseCategory/index'),
             meta: {
                 title: '课程分类管理',
-                icon: 'el-icon-collection'
+                icon: 'el-icon-s-management'
             }
         }]
     },
@@ -96,7 +96,7 @@ export const constantRoutes = [{
                 import ('@/views/userManager/index'),
             meta: {
                 title: '用户管理',
-                icon: 'el-icon-collection'
+                icon: 'el-icon-user-solid'
             }
         }],
     },
@@ -111,7 +111,7 @@ export const constantRoutes = [{
                 import ('@/views/action/index'),
             meta: {
                 title: '动作管理',
-                icon: 'el-icon-collection'
+                icon: 'el-icon-chicken'
             }
         }]
     },
@@ -125,7 +125,7 @@ export const constantRoutes = [{
                 import ('@/views/feedback/index'),
             meta: {
                 title: '反馈管理',
-                icon: 'el-icon-collection'
+                icon: 'el-icon-chat-line-square'
             }
         }],
     },
@@ -167,7 +167,7 @@ export const constantRoutes = [{
                 import ('@/views/publish/index'),
             meta: {
                 title: '发布文章',
-                icon: 'el-icon-collection'
+                icon: 'el-icon-notebook-1'
             }
         }],
     },
@@ -181,7 +181,21 @@ export const constantRoutes = [{
                 import ('@/views/navigation/index'),
             meta: {
                 title: '首页导航管理',
-                icon: 'el-icon-collection'
+                icon: 'el-icon-bicycle'
+            }
+        }],
+    },
+    {
+        path: '/certification',
+        component: Layout,
+        children: [{
+            path: 'index',
+            name: 'certification',
+            component: () =>
+                import ('@/views/certification/index'),
+            meta: {
+                title: '认证申请管理',
+                icon: 'el-icon-finished'
             }
         }],
     },
