@@ -199,6 +199,35 @@ export const constantRoutes = [{
             }
         }],
     },
+    {
+        path: '/orderManager',
+        component: Layout,
+        children: [{
+            path: 'index',
+            name: 'orderManager',
+            component: () =>
+                import ('@/views/orderManager/index'),
+            meta: {
+                title: '订单管理',
+                icon: 'el-icon-s-order'
+            }
+        }]
+    },
+    {
+        path: '/commodityManager',
+        component: Layout,
+        children: [{
+            path: 'index',
+            name: 'commodityManager',
+            component: () =>
+                import ('@/views/commodityManager/index'),
+            meta: {
+                title: '商品管理',
+                icon: 'el-icon-goods'
+            }
+        }]
+    },
+
     // 404 page must be placed at the end !!!
     {
         path: '*',

@@ -28,8 +28,6 @@ const mutations = {
     },
     SET_TOKEN: (state, token) => {
         state.token = token
-        console.log('3state.token处')
-        console.log(state.token)
     },
     SET_nickName: (state, nickName) => {
         state.nickName = nickName
@@ -56,31 +54,15 @@ const actions = {
                 code: code,
 
             }).then(response => {
-
-                console.log('2 response处👇')
-                console.log(response)
-
-
-                //和下面代码等价
-                // const { data } = response
-                // commit('SET_TOKEN', data.token)
-                // setToken(data.token)
-
-                // var token = response.data.token
-
                 if (!response) {
                     return reject('Verification failed, please Login again.')
                 }
-
                 const {
                     token,
                     nickName,
                     headPortrait
                 } = response.data
-
                 commit('SET_TOKEN', token)
-                console.log('1 setToken处打印token')
-                console.log(token)
                 setToken(token)
                 commit('SET_nickName', nickName)
                 commit('SET_headPortrait', headPortrait)
@@ -90,44 +72,6 @@ const actions = {
             })
         })
     },
-
-    //get user info
-    // getInfo({ commit, state }) {
-    //   return new Promise((resolve, reject) => {
-    //     getInfo(state.token).then(response => {
-    //       const { data } = response
-
-    //       if (!response) {
-    //         return reject('Verification failed, please Login again.')
-    //       }
-
-    //       const { nickName, headPortrait } = response.data
-
-    //       commit('SET_nickName', nickName)
-    //       commit('SET_AVATAR', headPortrait)
-    //       resolve(data)
-    //     }).catch(error => {
-    //       reject(error)
-    //     })
-    //   })
-    // },
-
-    // user logout
-    // logout({
-    //   commit,
-    //   state
-    // }) {
-    //   return new Promise((resolve, reject) => {
-    //     logout(state.token).then(() => {
-    //       removeToken() // must remove  token  first
-    //       resetRouter()
-    //       commit('RESET_STATE')
-    //       resolve()
-    //     }).catch(error => {
-    //       reject(error)
-    //     })
-    //   })
-    // },
 
     // remove token
     resetToken({
