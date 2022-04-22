@@ -49,32 +49,32 @@
         <el-table v-loading="listLoading" :data="list" border style="width: 100%">
           <!-- <el-table-column fixed prop="userId" label="用户ID" width="180">
           </el-table-column> -->
-           <el-table-column prop="nickName" label="文章ID" width="100">
+           <el-table-column prop="articleId" label="文章ID" width="100">
           </el-table-column>
-          <el-table-column prop="nickName" label="文章标题" width="230">
+          <el-table-column prop="title" label="文章标题" width="230">
           </el-table-column>
-           <el-table-column prop="nickName" label="用户昵称" width="150">
+           <el-table-column prop="" label="用户昵称" width="150">
           </el-table-column>
           <el-table-column prop="phoneNumber" label="作者(姓名)" width="150">
           </el-table-column>
-          <el-table-column prop="gender" label="发布时间" width="150">
+          <el-table-column prop="releaseTime" label="发布时间" width="150">
           </el-table-column>
           <el-table-column prop="type" label="文章状态" width="150">
             <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.type? "待审核" : "上架下架" }}</span>
+              <span style="margin-left: 10px">{{ scope.row.ifshelves? "待审核" : "上架下架" }}</span>
             </template>
           </el-table-column>
 
           <el-table-column label="操作" width="180">
             <template slot-scope="scope">
               <el-button size="mini" @click="dialogTableVisible = true;handleEdit(scope.row)">审核</el-button>
-              <el-button size="mini" type="danger" @click="handleDelete(scope.row.userId)">删除</el-button>
+              <el-button size="mini" type="danger" @click="handleDelete(scope.row.articleId)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
 
 <!-- 审核文章的弹窗 -->
- <el-dialog width=90% title="文章管理/审核文章" :visible.sync="dialogTableVisible" :data="list" >
+      <el-dialog width=90% title="文章管理/审核文章" :visible.sync="dialogTableVisible" :data="list" >
           <div class="demo-input-suffix">
             <el-row :gutter="10" padding="30px">
               <el-col :span="2">
@@ -201,10 +201,8 @@
 
 <script>
   import {
-    getList,
-    saveUserdata,
-    banUser,
-  } from '@/api/userManager'
+    deleteArticle
+  } from '@/api/articleAdminManager'
 import { getToken } from '@/utils/auth'
 
   export default {
@@ -268,7 +266,7 @@ import { getToken } from '@/utils/auth'
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.delete_user(index);
+          this.deleteArticle(index);
           this.fetchData();
           this.$message({
             type: 'success',

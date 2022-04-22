@@ -41,9 +41,9 @@
 </template>
 
 <script>
-  // import {
-  //   validUsername
-  // } from '@/utils/validate'
+  import {
+    validUsername
+  } from '@/utils/validate'
 
   import{
     getCode

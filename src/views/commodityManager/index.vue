@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <h1>商品管理{{change_action.actionImg}}</h1>
+    <h1>商品管理</h1>
      <div class="filter-container">
         <span>
           <h3>商品筛选</h3>
@@ -208,37 +208,22 @@
  
 
   
-        <!-- 添加课程 -->
+        <!-- 添加商品 -->
         <el-table v-loading="listLoading" :data="list" border style="width: 100%">
-          <el-table-column fixed prop="" label="商品ID" width="150">
-              001
-          </el-table-column>
-          <el-table-column prop="" label="商品名称" width="130">
-              计时器
-          </el-table-column>
-          <el-table-column  prop="" label="商品图片" width="120">
+          <el-table-column fixed prop="goodsId" label="商品ID" width="150"></el-table-column>
+          <el-table-column prop="goodsName" label="商品名称" width="130"></el-table-column>
+          <el-table-column  prop="goodsUrl" label="商品图片" width="120">
             <template slot-scope="scope">
             　　      <img  width="40" height="40" />
             </template>
           </el-table-column>
-        
-          <el-table-column prop="" label="价格(M币)" width="130">
-              500
-          </el-table-column>
-          <el-table-column prop="" label="分类" width="130">
-              学习用品
-          </el-table-column>
-          <el-table-column prop="" label="运费" width="130">
-              免运费
-          </el-table-column>
-              <el-table-column prop="" label="库存" width="130">
-              500
-          </el-table-column>
-              <el-table-column prop="" label="已兑换" width="130">
-              500
+          <el-table-column prop="price" label="价格(M币)" width="130"> </el-table-column>
+          <el-table-column prop="type" label="分类" width="130"></el-table-column>
+          <el-table-column prop="exchange" label="运费" width="130"> </el-table-column>
+          <el-table-column prop="inventory" label="库存" width="130"> </el-table-column>
+          <el-table-column prop="" label="已兑换" width="130">
           </el-table-column>
            <el-table-column prop="" label="状态" width="130">
-             上架/下架
           </el-table-column>
           <el-table-column label="操作" width="180">
             <template slot-scope="scope">
@@ -318,11 +303,8 @@
 
 <script>
   import {
-    deleteAction,
-    getList,
-    insertAction,
-    updataAction,
-  } from '@/api/action'
+   getGoods
+  } from '@/api/commodityManager'
 import { getToken } from '@/utils/auth'
   export default {
     data() {
@@ -388,8 +370,8 @@ import { getToken } from '@/utils/auth'
     methods: {
       fetchData() {
         this.listLoading = true
-        getList(this.page,this.size).then(response => {
-          this.list = response.data.adminActionDtoList
+        getGoods(this.page,this.size).then(response => {
+          this.list = response.data
           this.total = response.data.total
           this.listLoading = false
         })

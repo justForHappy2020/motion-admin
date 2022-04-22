@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <h1>订单管理{{change_action.actionImg}}</h1>
+    <h1>订单管理</h1>
      <div class="filter-container">
         <span>
           <h3>订单筛选</h3>
@@ -171,25 +171,28 @@
   
         <!-- 添加课程 -->
         <el-table v-loading="listLoading" :data="list" border style="width: 100%">
-          <el-table-column fixed prop="" label="运单号" width="150">
-              00899
+          <el-table-column fixed prop="orderId" label="编号" width="150">
+              
+          </el-table-column>
+           <el-table-column prop="waybillNumber" label="运单号" width="130">
+              
           </el-table-column>
           <el-table-column prop="" label="物流公司" width="130">
               
           </el-table-column>
         
-          <el-table-column prop="" label="地址" width="130">
+          <el-table-column prop="address" label="地址" width="130">
           </el-table-column>
-          <el-table-column prop="" label="物流状态" width="130">
+          <el-table-column prop="state" label="物流状态" width="130">
           </el-table-column>
-          <el-table-column prop="" label="商品名称" width="130">
+          <el-table-column prop="goodsName" label="商品名称" width="130">
           </el-table-column>
-              <el-table-column prop="" label="下单时间" width="130">
+              <el-table-column prop="time" label="下单时间" width="130">
             
           </el-table-column>
-              <el-table-column prop="" label="运费" width="130">
+              <el-table-column prop="freight" label="运费" width="130">
           </el-table-column>
-           <el-table-column prop="" label="价格" width="130">
+           <el-table-column prop="price" label="价格" width="130">
           </el-table-column>
           <el-table-column label="操作" width="180">
             <template slot-scope="scope">
@@ -213,7 +216,7 @@
 
       </span>
      </div>
-s </div>
+</div>
   
 </template>
 
@@ -255,11 +258,8 @@ s </div>
 
 <script>
   import {
-    deleteAction,
-    getList,
-    insertAction,
-    updataAction,
-  } from '@/api/action'
+   getOrder,
+  } from '@/api/orderManager'
 import { getToken } from '@/utils/auth'
   export default {
     data() {
@@ -337,9 +337,10 @@ import { getToken } from '@/utils/auth'
     methods: {
       fetchData() {
         this.listLoading = true
-        getList(this.page,this.size).then(response => {
-          this.list = response.data.adminActionDtoList
-          this.total = response.data.total
+        getOrder(this.page,this.size).then(response => {
+          this.list = response.data
+          console.log(response.data)
+          // this.total = response.data.total
           this.listLoading = false
         })
       },

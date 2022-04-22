@@ -31,10 +31,6 @@ export default {
         
       }
     },
-    //  created() {
-    //     this.fetchData()
-    //     console.log('HHH')
-    // },
     methods: {
         fetchData() {
           this.loading = true

@@ -6,9 +6,9 @@ export function sendFeedback(data) {
         data
     })
 }
-export function getFeedback(token, page, size) {
+export function getNavigation(token, page, size) {
     return request({
-        url: '/user/getFeedback',
+        url: '/user/getNavigation',
         method: 'get',
         params: {
             token: token,

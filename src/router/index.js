@@ -82,7 +82,8 @@ export const constantRoutes = [{
                 import ('@/views/courseCategory/index'),
             meta: {
                 title: '课程分类管理',
-                icon: 'el-icon-s-management'
+                icon: 'el-icon-s-management',
+                roles: ['editor']
             }
         }]
     },
@@ -227,7 +228,20 @@ export const constantRoutes = [{
             }
         }]
     },
-
+    {
+        path: '/dailyTask',
+        component: Layout,
+        children: [{
+            path: 'index',
+            name: 'dailyTask',
+            component: () =>
+                import ('@/views/dailyTask/index'),
+            meta: {
+                title: '每日任务',
+                icon: 'el-icon-s-claim'
+            }
+        }]
+    },
     // 404 page must be placed at the end !!!
     {
         path: '*',

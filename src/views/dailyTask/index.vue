@@ -1,153 +1,157 @@
 <template>
   <div class="app-container">
-    <h1>认证管理</h1>
-     <div class="filter-container">
-        <span>
-          <h3>申请筛选</h3>
-          <el-row :gutter="10">
-          <el-col :span="7">上线状态
-          <el-select placeholder="请选择">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </el-col>
-
-        <el-col :span="11">
-          申请时间
-           <el-date-picker  type="datetimerange" range-separator="至" start-placeholder="开始日期"
-             end-placeholder="结束日期">
-           </el-date-picker>
-            </el-col>
-
-        <el-col :span="5">
-          <el-input  placeholder="请输入用户昵称"></el-input>
-        </el-col>
-
-        <el-col :span="1">
-        <el-button type="primary" icon="el-icon-search" @click="submit">筛选</el-button>
-        </el-col>
-
+    <h1>每日任务</h1>
+    <div class="filter-container">
+      <span>
+        <h3>任务筛选</h3>
+        <el-row :gutter="10">
+          <el-col :span="7">任务状态
+            <el-select v-model="value_tpye" placeholder="请选择">
+              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled">
+              </el-option>
+            </el-select>
+          </el-col>
+          <el-col :span="11">上传时间
+            <el-date-picker v-model="value_data" type="datetimerange" range-separator="至" start-placeholder="开始日期"
+              end-placeholder="结束日期">
+            </el-date-picker>
+          </el-col>
+          <el-col :span="5">
+            <div>
+              <el-input v-model="input" placeholder="请输入任务内容关键词"></el-input>
+            </div>
+          </el-col>
+          <el-col :span="1">
+            <div>
+              <el-button type="primary" icon="el-icon-search">筛选</el-button>
+            </div>
+          </el-col>
         </el-row>
-        </span>
-      </div>
+      </span>
+    </div>
 
     <div class="filter-container">
       <span>
         <el-row :gutter="24">
           <el-col :span="20">
             <div class="grid-content bg-purple">
-              <h3><strong>申请列表</strong></h3>
+              <h3><strong>任务列表</strong></h3>
+            </div>
+          </el-col>
+          <el-col :span="4">
+            <div class="grid-content bg-purple-light">
+              <el-button type="primary" icon="el-icon-search" @click="dialogFormVisible = true,disabled=true">添加任务</el-button>
             </div>
           </el-col>
         </el-row>
-     <!-- 添加动作的弹窗 -->
-        <el-dialog width=90% title="审核认证" :visible.sync="dialogFormVisible">
-          <div class="height_action">请审核用户提交的资料</div>
+<!-- 添加动作的弹窗 -->
+        <el-dialog width=90% title="任务管理/添加任务" :visible.sync="dialogFormVisible">
+          <div class="height_action">请填写任务相关信息</div>
           <div class="demo-input-suffix">
             <el-row :gutter="10" padding="30px">
               <el-col :span="2">
-                <h3>真实姓名:</h3>
+                <h3>任务名称:</h3>
               </el-col>
               <el-col :span="7">
+                <el-input placeholder="请输入内容" v-model="upload_action.actionName"></el-input>
+              </el-col>
+            </el-row>
+              <el-row :gutter="10" padding="30px">
+              <el-col :span="2">
+                <h3 >价格(M币):</h3>
+              </el-col>
+              <el-col :span="7">
+                <el-input v-model="change_action.actionName" ></el-input>
               </el-col>
             </el-row>
             <div class="height_action_leg"></div>
             <el-row :gutter="10" padding="30px">
               <el-col :span="2">
-                <h3>手机号码:</h3>
+                <h3>任务状态:</h3>
               </el-col>
-              <el-col :span="7">
-                <el-upload auto-upload=false limit=1 
-                  action="http://106.55.25.94:8080/api/user/modifyHptIos"
-                  :data="transformPhoto"
-                  name="headPortrait"
-                  :on-success="upload_imgs" 
-                  list-type="picture-card"
-                  :on-preview="handlePictureCardPreview" :on-remove="handleRemove">
-                  <i class="el-icon-plus"></i>
-                  <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
-                </el-upload>
+              <el-col :span="7" >
+                <div class="height_action_leg"></div>
+                <div ><span >{{ this.change_action.type === 1 ? "上线" : "下线" }}</span></div>
+                <div class="height_action_leg"></div>
+                 <el-radio-group v-model="change_action.type ">         
+                <el-radio :label="1">上线</el-radio>
+                <el-radio :label="0">下线</el-radio> </el-radio-group> 
               </el-col>
-            </el-row>
-            <el-row :gutter="10" padding="30px">
-              <el-col :span="2">
-                <h3>手机号码:</h3>
-              </el-col>
-                 <div class="height_action_leg"></div>
             </el-row>
             <div class="height_action_leg"></div>
-           <el-row :gutter="10" padding="30px">
-              <el-col :span="3">
-                <h3>证件号码:</h3>
-              </el-col>
-           </el-row>
-            <el-row :gutter="10" padding="30px">
-              <el-col :span="3">
-                <h3>机构或组织:</h3>
-
-              </el-col> 
-           </el-row>
-            <el-row :gutter="10" padding="30px">
-              <el-col :span="3">
-                <h3>职称或称号:</h3>
-              </el-col>
-           </el-row>
-
-           <el-row :gutter="10" padding="30px">
-              <el-col :span="3">
-                <h3>认证说明:</h3>  
-              </el-col>
-           </el-row>
-              <div class="weight_action">
-                <el-input type="textarea" :rows="5">
-                </el-input>
-              </div>
-            <el-row :gutter="10" padding="30px">
-              <el-col :span="3">
-                <h3>认证材料:</h3>  
-              </el-col>
-           </el-row>
             <el-row :gutter="10" padding="30px">
               <el-col :span="5" :offset="5">
-                <el-button type="success" @click="insert_action" :disabled="disabled">同意申请</el-button>
+                <el-button type="success" @click="insert_action" :disabled="disabled">立即添加</el-button>
                 <!-- <el-button type="success" @click="disabledChange">修改</el-button> -->
               </el-col>
               <el-col :span="5">
-                <el-button type="danger" @click="dialogFormVisible = false">拒绝申请</el-button>
+                <el-button @click="dialogFormVisible = false">取消</el-button>
               </el-col>
             </el-row>
           </div>
         </el-dialog>
- 
-
-  
-        <!-- 添加课程 -->
+ <!-- 修改动作的弹窗 -->
+ <el-dialog width=90% title="任务管理/更新任务" :visible.sync="dialogTableVisible" :data="list" >
+          <div class="height_action">请填写任务相关信息</div>
+          <div class="demo-input-suffix">
+            <el-row :gutter="10" padding="30px">
+              <el-col :span="2">
+                <h3 >任务名称:</h3>
+              </el-col>
+              <el-col :span="7">
+                <el-input v-model="change_action.actionName" ></el-input>
+              </el-col>
+            </el-row>
+            <el-row :gutter="10" padding="30px">
+              <el-col :span="2">
+                <h3 >价格(M币):</h3>
+              </el-col>
+              <el-col :span="7">
+                <el-input v-model="change_action.actionName" ></el-input>
+              </el-col>
+            </el-row>
+            <div class="height_action_leg"></div>
+            <el-row :gutter="10" padding="30px">
+              <el-col :span="2">
+                <h3>任务状态:</h3>
+              </el-col>
+              <el-col :span="7" >
+                <div class="height_action_leg"></div>
+                <div ><span >{{ this.change_action.type === 1 ? "上线" : "下线" }}</span></div>
+                <div class="height_action_leg"></div>
+                 <el-radio-group v-model="change_action.type ">         
+                <el-radio :label="1">上线</el-radio>
+                <el-radio :label="0">下线</el-radio> </el-radio-group> 
+              </el-col>
+            </el-row>
+            <div class="height_action_leg"></div>
+           
+            <el-row :gutter="10" padding="30px">
+            </el-row>
+            <div class="height_action_leg"></div>
+            <el-row :gutter="10" padding="30px">
+              <el-col :span="5" :offset="5">
+                <el-button type="success" @click="updata_action();TableVisible();">立即修改</el-button>
+              </el-col>
+              <el-col :span="5">
+                <el-button @click="dialogTableVisible = false">取消</el-button>
+              </el-col>
+            </el-row>
+          </div>
+        </el-dialog>
+        <!-- 编辑动作弹窗结束 -->
         <el-table v-loading="listLoading" :data="list" border style="width: 100%">
-          <el-table-column fixed prop="applyId" label="认证ID" width="150">{{userName}}
+          <el-table-column fixed prop="actionId" label="编号" width="150">
           </el-table-column>
-          <el-table-column prop="userId" label="用户ID" width="130">
+          <el-table-column prop="" label="任务" width="300">
           </el-table-column>
-          <el-table-column  prop="phone" label="手机号" width="120">
-            <!-- <template slot-scope="scope">
-            <!-- 　　      <img :src="scope.row.actionImgs" width="40" height="40" /> -->
-            <!-- </template> --> 
+          <el-table-column prop="" label="价格(M币)" width="130">
           </el-table-column>
-        
-          <el-table-column prop="applyNumber" label="申请次数" width="130">
-          </el-table-column>
-          <el-table-column prop="time" label="申请时间" width="130">
-          </el-table-column>
-          <el-table-column prop="" label="审核结果" width="130">
-          </el-table-column>
-           <el-table-column prop="" label="审核状态" width="130">
+          <el-table-column prop="" label="任务状态" width="130">
           </el-table-column>
           <el-table-column label="操作" width="180">
             <template slot-scope="scope">
-              <el-button size="mini"  @click="dialogFormVisible = true;handleEdit(scope.row);show_imgs()">审核</el-button>
+              <el-button size="mini"  @click="dialogTableVisible = true;handleEdit(scope.row);show_imgs()">编辑</el-button>
               <el-button size="mini" type="danger" @click="handleDelete(scope.row.actionId)">删除</el-button>
             </template>
           </el-table-column>
@@ -166,9 +170,8 @@
         </div>
 
       </span>
-     </div>
- </div>
-  
+    </div>
+  </div>
 </template>
 
 <style>
@@ -207,8 +210,11 @@
 
 <script>
   import {
-    getApply
-  } from '@/api/certification'
+    deleteAction,
+    getList,
+    insertAction,
+    updataAction,
+  } from '@/api/action'
 import { getToken } from '@/utils/auth'
   export default {
     data() {
@@ -271,11 +277,9 @@ import { getToken } from '@/utils/auth'
     methods: {
       fetchData() {
         this.listLoading = true
-        getApply(this.page,this.size).then(response => {
-         
-          this.list = response.data
-       console.log(response.data)
-          // this.total = response.data.total
+        getList(this.page,this.size).then(response => {
+          this.list = response.data.adminActionDtoList
+          this.total = response.data.total
           this.listLoading = false
         })
       },

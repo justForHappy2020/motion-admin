@@ -101,10 +101,7 @@
               :total="1000">
               </el-pagination>
             </div>
-          </el-row>
-
-
-        
+          </el-row>    
 
             <el-row :gutter="10" padding="30px">
               <el-col :span="5" :offset="5">
@@ -122,21 +119,21 @@
   
         <!-- 添加课程 -->
         <el-table v-loading="listLoading" :data="list" border style="width: 100%">
-          <el-table-column fixed prop="" label="编号" width="150">
+          <el-table-column fixed prop="navigationId" label="编号" width="150">
           </el-table-column>
-          <el-table-column prop="" label="名称" width="130">
+          <el-table-column prop="name" label="名称" width="130">
           </el-table-column>
-          <el-table-column  prop="" label="图案" width="120">
+          <el-table-column  prop="imgUrl" label="图案" width="120">
             <template slot-scope="scope">
-            <!-- 　　      <img :src="scope.row.actionImgs" width="40" height="40" /> -->
+            　　      <img :src="scope.row.ImgUrl" width="40" height="40" />
             </template>
           </el-table-column>
         
-          <el-table-column prop="" label="说明" width="130">
+          <el-table-column prop="content" label="说明" width="130">
           </el-table-column>
-          <el-table-column prop="" label="创建人" width="130">
+          <el-table-column prop="upload" label="创建人" width="130">
           </el-table-column>
-          <el-table-column prop="" label="添加时间" width="130">
+          <el-table-column prop="time" label="添加时间" width="130">
           </el-table-column>
           <el-table-column label="操作" width="180">
             <template slot-scope="scope">
@@ -199,11 +196,8 @@
 
 <script>
   import {
-    deleteAction,
-    getList,
-    insertAction,
-    updataAction,
-  } from '@/api/action'
+   getNavigation
+  } from '@/api/navigation'
 import { getToken } from '@/utils/auth'
   export default {
     data() {
@@ -266,9 +260,10 @@ import { getToken } from '@/utils/auth'
     methods: {
       fetchData() {
         this.listLoading = true
-        getList(this.page,this.size).then(response => {
-          this.list = response.data.adminActionDtoList
-          this.total = response.data.total
+        getNavigation(this.page,this.size).then(response => {
+          this.list = response.data
+          console.log(response.data)
+          // this.total = response.data.total
           this.listLoading = false
         })
       },
