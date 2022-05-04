@@ -9,3 +9,27 @@ export function getNavigation(page, size) {
         }
     })
 }
+export function updateNavigation(data) {
+    return request({
+        url: '/admin/updateNavigation',
+        method: 'post',
+        data
+    })
+}
+export function insertNavigation(data) {
+    return request({
+        url: '/admin/insertNavigation',
+        method: 'post',
+        data
+    })
+}
+export function delectNavigation(token, navigationId) {
+    return request({
+        url: '/admin/delectNavigation',
+        method: 'get',
+        params: {
+            token: token,
+            navigationId: navigationId
+        }
+    })
+}

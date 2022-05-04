@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <h1>首页导航管理{{change_action.actionImg}}</h1>
+    <h1>首页导航管理</h1>
     <div class="filter-container">
       <span>
         <el-row :gutter="24">
@@ -15,22 +15,25 @@
             </div>
           </el-col>
         </el-row>
-<!-- 添加动作的弹窗 -->
+<!-- 添加导航的弹窗【增】 -->
         <el-dialog width=90% title="首页导航管理/添加快速导航" :visible.sync="dialogFormVisible">
-          <div class="height_action">请填写轮播图相关信息</div>
-          <div class="demo-input-suffix">
+          <div class="height_action">请填写导航相关信息</div>
+
+            <div class="demo-input-suffix">
             <el-row :gutter="10" padding="30px">
               <el-col :span="2">
                 <h3>导航名称:</h3>
               </el-col>
               <el-col :span="7">
-                <el-input placeholder="请输入导航名称" v-model="upload_action.actionName"></el-input>
+                <el-input placeholder="请输入导航名称" v-model="upload_navigation.name"></el-input>
               </el-col>
             </el-row>
+
+            
             <div class="height_action_leg"></div>
             <el-row :gutter="10" padding="30px">
               <el-col :span="2">
-                <h3>课程图案:</h3>
+                <h3>导航图案:</h3>
               </el-col>
               <el-col :span="7">
                 <el-upload auto-upload=false limit=1 
@@ -38,86 +41,118 @@
                   :data="transformPhoto"
                   name="headPortrait"
                   :on-success="upload_imgs" 
-                  list-type="picture-card"
-                  :on-preview="handlePictureCardPreview" :on-remove="handleRemove">
+                  list-type="picture-card" >
                   <i class="el-icon-plus"></i>
                   <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
                 </el-upload>
               </el-col>
             </el-row>
+
             <el-row :gutter="10" padding="30px">
               <el-col :span="2">
+                 <div class="height_action_leg"></div>
                 <h3>导航说明:</h3>
               </el-col>
                  <div class="height_action_leg"></div>
               <el-col :span="7">
-                <el-input placeholder="请输入轮播图说明" v-model="upload_action.actionName"></el-input>
+                <el-input placeholder="请输入导航说明" v-model="upload_navigation.content"></el-input>
               </el-col>
             </el-row>
-            <div class="height_action_leg"></div>
-           <el-row :gutter="10" padding="30px">
-              <el-col :span="3">
-                <h3>跳转后的课程列表:</h3>
+
+             <el-row :gutter="10" padding="30px">
+              <el-col :span="2">
+                 <div class="height_action_leg"></div>
+                <h3>创建人:</h3>
               </el-col>
+                 <div class="height_action_leg"></div>
               <el-col :span="7">
-   <!-- TIANJAI？????              -->
-                 <el-button type="success" @click="dialogFormVisible = false">添加课程</el-button>
+                <el-input placeholder="请输入创建人昵称" v-model="upload_navigation.upload"></el-input>
               </el-col>
             </el-row>
+
             <div class="height_action_leg"></div>
-            <el-row :gutter="10" padding="30px">
-              <!-- <el-col :span="2">
-                <h3>创始人名称:</h3>
-              </el-col>
-              <el-col :span="7">
-                <el-input placeholder="请输入内容" v-model="action_username_input"></el-input>
-              </el-col> -->
-            </el-row>
-            <div class="height_action_leg"></div>
-
-          <div class="height_action_leg"></div>
-          <el-row :gutter="20">
-            <el-col :span="10" v-for="o in actionList" :key="o" :offset="index > 0 ? 2 : 0" >
-              <el-card :body-style="{ padding: '0px' }">
-                <!-- ljh修改图片类型方便后续修改 -->
-                <el-image :src="o.actionImgs"></el-image>
-                <div style="padding: 14px;">
-                  <span>{{o.actionName}}</span>
-                    <el-button type="text" class="button"
-                    @click="add_action(o)">添加</el-button>
-                </div>
-              </el-card>
-            </el-col>
-          </el-row>
-
-          <el-row>
-            <div class="pagination-container">
-              <el-pagination
-              background
-              layout="prev, pager, next"
-              @current-change="action_CurrentChange"
-              :current-page="action_page"
-              @size-change="getactionList(searchAction,action_page,action_size)"
-              :total="1000">
-              </el-pagination>
-            </div>
-          </el-row>    
-
             <el-row :gutter="10" padding="30px">
               <el-col :span="5" :offset="5">
-                <el-button type="success" @click="insert_action" :disabled="disabled">立即添加</el-button>
-                <!-- <el-button type="success" @click="disabledChange">修改</el-button> -->
-              </el-col>
+                <el-button type="success" @click="insert_navigation" :disabled="disabled">立即添加</el-button> 
+             </el-col>
               <el-col :span="5">
                 <el-button @click="dialogFormVisible = false">取消</el-button>
               </el-col>
             </el-row>
           </div>
         </el-dialog>
- 
+<!-- 修改导航 -->
+<el-dialog width=90% title="导航管理/更新导航" :visible.sync="dialogTableVisible"  :data="list" >
+          <div class="height_action">请填写导航相关信息</div>
+          <div class="demo-input-suffix">
+            <el-row :gutter="10" pading="30px">
+              <el-col :span="2">
+                <h3>导航ID:</h3>
+              </el-col>
+              <el-col :span="7">
+                <el-input  v-model="change_navigation.navigationId"></el-input>
+              </el-col>
+            </el-row>
 
+            <el-row :gutter="10" pading="30px">
+              <el-col :span="2">
+                <h3>导航名称:</h3>
+              </el-col>
+              <el-col :span="7">
+                <el-input  v-model="change_navigation.name"></el-input>
+              </el-col>
+            </el-row>
+
+            <el-row :gutter="10" pading="30px">
+              <el-col :span="2">
+                <h3>创建人:</h3>
+              </el-col>
+              <el-col :span="7">
+                <el-input v-model="change_navigation.upload"></el-input>
+              </el-col>
+            </el-row>
+
+          <div class="height_action_leg"></div>
+            <el-row :gutter="10" padding="30px">
+              <el-col :span="2">
+                <h3>导航图案:</h3>
+              </el-col>
+              <el-col :span="7">
+                <el-upload auto-upload=false limit=1 
+                  action="http://106.55.25.94:8080/api/user/modifyHptIos"
+                  :data="transformPhoto"
+                  name="headPortrait"
+                  :on-success="upload_imgs" 
+                  list-type="picture-card" >
+                  <i class="el-icon-plus"></i>
+                  <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
+                </el-upload>
+              </el-col>
+            </el-row>
+
+            <div class="height_action_leg"></div>
+            <el-row :gutter="10" pading="30px">
+              <el-col :span="2">
+                <h3>说明:</h3>
+              </el-col>
+              <el-col :span="7">
+                <el-input v-model="change_navigation.content"></el-input>
+              </el-col>
+            </el-row>
+
+            <div class="height_action_leg"></div>
+            <el-row :gutter="10" pading="30px">
+              <el-col :span="5" :offset="5">
+                <el-button type="success" @click="updata_navigation();TableVisible();">立即更新</el-button>
+              </el-col>
+              <el-col :span="5">
+                <el-button @click="dialogTablemVisible = false">取消</el-button>
+              </el-col>
+            </el-row>
+          </div>
+        </el-dialog>
   
-        <!-- 添加课程 -->
+<!-- 展示导航【查】 -->
         <el-table v-loading="listLoading" :data="list" border style="width: 100%">
           <el-table-column fixed prop="navigationId" label="编号" width="150">
           </el-table-column>
@@ -125,10 +160,9 @@
           </el-table-column>
           <el-table-column  prop="imgUrl" label="图案" width="120">
             <template slot-scope="scope">
-            　　      <img :src="scope.row.ImgUrl" width="40" height="40" />
+            　　<img :src="scope.row.imgUrl" width="40" height="40" />
             </template>
           </el-table-column>
-        
           <el-table-column prop="content" label="说明" width="130">
           </el-table-column>
           <el-table-column prop="upload" label="创建人" width="130">
@@ -138,7 +172,7 @@
           <el-table-column label="操作" width="180">
             <template slot-scope="scope">
               <el-button size="mini"  @click="dialogTableVisible = true;handleEdit(scope.row);show_imgs()">编辑</el-button>
-              <el-button size="mini" type="danger" @click="handleDelete(scope.row.actionId)">删除</el-button>
+              <el-button size="mini" type="danger" @click="handleDelete(scope.row.navigationId)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -188,15 +222,15 @@
 .weight_action{
   width: 50%;
 }
-
-
 </style>
-
 
 
 <script>
   import {
-   getNavigation
+   getNavigation,
+   updateNavigation,
+   insertNavigation,
+   delectNavigation
   } from '@/api/navigation'
 import { getToken } from '@/utils/auth'
   export default {
@@ -204,8 +238,6 @@ import { getToken } from '@/utils/auth'
       return {
         list: [],
         disabled:true,
-        action_textarea: '',
-        action_radio: 1,
         dialogFormVisible: false,
         dialogVisible: false,
         dialogTableVisible:false,
@@ -222,28 +254,26 @@ import { getToken } from '@/utils/auth'
         page:1 , //当前页
         size:10   ,//每页展示的条数
         total:null,   //数据总量
-        upload_action:{
+        change_navigation:{
           token:getToken(),
-          actionName:'',
-          actionImgs:'',
-          actionUrl:'',
-          actionIntro:'',
-          restDuration:0,
-          duration:0,
-          size:0,
-          type:0
+          name:'',
+          ImgUrl:'',
+          content:'',
+          upload:'',
+          time:'',
+          navigationId:0,
         },
         show_img:[{name:'hhh',url:''}],
         transformPhoto:{
           file:null,
           token:getToken()
         },
-         change_action:{
-          actionId:'',
-          actionName:'',
-          actionImgs:'',
-          actionUrl:'',
-          actionIntro:'',
+         upload_navigation:{
+          name:'',
+          imgUrl:'',
+          content:'',
+          upload:'',
+          time:'',
           restDuration:0,
           duration:0,
           size:0,
@@ -262,8 +292,7 @@ import { getToken } from '@/utils/auth'
         this.listLoading = true
         getNavigation(this.page,this.size).then(response => {
           this.list = response.data
-          console.log(response.data)
-          // this.total = response.data.total
+          console.log(this.list)
           this.listLoading = false
         })
       },
@@ -277,13 +306,13 @@ import { getToken } from '@/utils/auth'
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.delete_actioni(index);
-            this.fetchData();
+         this.delete_navigation(index) ;
+          this.fetchData();
           this.$message({
             type: 'success',
             message: '删除成功!'
           });
-            this.fetchData();
+          this.fetchData();
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -300,52 +329,41 @@ import { getToken } from '@/utils/auth'
       },
       // 分页
       handleSizeChange(size) {
-              // console.log(`每页 ${size} 条`);
               this.size = size;
               this.fetchData();
             },
       handleCurrentChange(page) {
-              // console.log(`当前页: ${page}`);
               this.page = page;
               this.fetchData();
             },
-      upload_video(response){
-        this.upload_action.actionUrl=response.data
-        this.disabled=false;
-      },
       upload_imgs(response){
-        this.upload_action.actionImgs=response.data;
-       this.disabled=false;
-        
+        this.upload_navigation.imgUrl=response.data;
+        console.log(this.upload_navigation.imgUrl);
+        this.disabled=false;    
       },
-      insert_action(){
-         this.fetchData();
-        insertAction(this.upload_action);
-         this.fetchData();
+      insert_navigation(){
+        this.fetchData();
+        insertNavigation(this.upload_navigation);
+        this.fetchData();
         this.dialogFormVisible = false;
        
       },
-      delete_actioni(index){
-        deleteAction(getToken(),index);
+      delete_navigation(index){
+        delectNavigation(getToken(),index);
 
       },
-      //修改动作信息
+      //修改导航信息
       show_imgs(){
-       this.show_img[0].url=this.change_action.actionImgs;
-       this.show_img[0].name=this.change_action.actionName;
-      },
-      change_video(response){
-        this.change_action.actionUrl=response.data
+       this.show_img[0].url=this.change_navigation.ImgUrl;
       },
       change_imgs(response){
-         this.change_action.actionImgs=response.data
+         this.change_navigation.ImgUrl=response.data
       },
       handleEdit(row){
-        this.change_action=JSON.parse(JSON.stringify(row));
+        this.change_navigation=JSON.parse(JSON.stringify(row));
       },
-      updata_action(){ 
-        console.log(this.change_action);
-        updataAction(this.change_action)
+      updata_navigation(){ 
+        updateNavigation(this.change_navigation)
         .then(() => {
           this.$message({
             type: 'success',
