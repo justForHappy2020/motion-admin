@@ -9,3 +9,11 @@ export function getOrder(page, size) {
         }
     })
 }
+
+export function insertOrder(data) {
+    return request({
+        url: '/admin/insertOrder',
+        method: 'post',
+        data
+    })
+}

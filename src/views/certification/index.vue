@@ -131,11 +131,11 @@
           </el-table-column>
           <el-table-column prop="userId" label="用户ID" width="130">
           </el-table-column>
-          <el-table-column  prop="phone" label="手机号" width="120">
+          <el-table-column  prop="phone" label="手机号" width="120"> </el-table-column>
             <!-- <template slot-scope="scope">
-            <!-- 　　      <img :src="scope.row.actionImgs" width="40" height="40" /> -->
+             <!-- 　　      <img :src="scope.row.actionImgs" width="40" height="40" /> -->
             <!-- </template> --> 
-          </el-table-column>
+         
         
           <el-table-column prop="applyNumber" label="申请次数" width="130">
           </el-table-column>
@@ -148,7 +148,7 @@
           <el-table-column label="操作" width="180">
             <template slot-scope="scope">
               <el-button size="mini"  @click="dialogFormVisible = true;handleEdit(scope.row);show_imgs()">审核</el-button>
-              <el-button size="mini" type="danger" @click="handleDelete(scope.row.actionId)">删除</el-button>
+              <el-button size="mini" type="danger" @click="handleDelete(scope.row.applyId)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -207,7 +207,8 @@
 
 <script>
   import {
-    getApply
+    getApply,
+    delectApply
   } from '@/api/certification'
 import { getToken } from '@/utils/auth'
   export default {
@@ -274,7 +275,7 @@ import { getToken } from '@/utils/auth'
         getApply(this.page,this.size).then(response => {
          
           this.list = response.data
-       console.log(response.data)
+          console.log(response.data)
           // this.total = response.data.total
           this.listLoading = false
         })
@@ -289,7 +290,7 @@ import { getToken } from '@/utils/auth'
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.delete_actioni(index);
+          this.delete_apply(index);
             this.fetchData();
           this.$message({
             type: 'success',
@@ -337,8 +338,8 @@ import { getToken } from '@/utils/auth'
         this.dialogFormVisible = false;
        
       },
-      delete_actioni(index){
-        deleteAction(getToken(),index);
+      delete_apply(index){
+        delectApply(getToken(),index);
 
       },
       //修改动作信息

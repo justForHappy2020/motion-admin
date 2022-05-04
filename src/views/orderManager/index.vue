@@ -39,11 +39,151 @@
         <el-row :gutter="24">
           <el-col :span="20">
             <div class="grid-content bg-purple">
-              <h3><strong>商品列表</strong></h3>
+              <h3><strong>订单列表</strong></h3>
+            </div>
+          </el-col>
+            <el-col :span="4">
+            <div class="grid-content bg-purple-light">
+              <el-button
+                type="primary"
+                icon="el-icon-search"
+                @click="(dialogTableVisible = true), (disabled = true)"
+                >添加订单</el-button
+              >
             </div>
           </el-col>
         </el-row>
-     <!-- 添加动作的弹窗 -->
+    
+ <!-- 添加订单的弹窗 -->
+        <el-dialog
+          width="75%"
+          title="添加订单"
+          :visible.sync="dialogTableVisible"
+        >
+          <div class="height_action">请填写订单相关信息</div>
+          <div class="demo-input-suffix">
+            <el-row :gutter="10" padding="30px">
+              <el-col :span="2">
+                <h3>运单号:</h3>
+              </el-col>
+              <el-col :span="7">
+                <el-input
+                  placeholder="请输入内容"
+                  v-model="upload_order.waybillNumber"
+                ></el-input>
+              </el-col>
+            </el-row>
+            <el-row :gutter="10" padding="30px">
+              <el-col :span="2">
+                <h3>物流公司:</h3>
+              </el-col>
+              <el-col :span="7">
+                <el-input
+                  placeholder="请输入内容"
+                  v-model="upload_order.address"
+                ></el-input>
+              </el-col>
+            </el-row>
+            <div class="height_action_leg"></div>
+            <el-row :gutter="10" padding="30px">
+              <el-col :span="2">
+                <h3>地址:</h3>
+              </el-col>
+              <el-col :span="7">
+                <el-input
+                  placeholder="请输入内容"
+                  v-model="upload_order.state"
+                ></el-input>
+              </el-col>
+            </el-row>
+            <el-row :gutter="10" padding="30px">
+              <el-col :span="2">
+                <h3>价格:</h3>
+              </el-col>
+              <el-col :span="7">
+                <el-input
+                  placeholder="请输入内容"
+                  v-model="upload_order.price"
+                ></el-input>
+              </el-col>
+            </el-row>
+            <!-- <el-row :gutter="10" padding="30px">
+              <el-col :span="2">
+                <h3>状态:</h3>
+              </el-col>
+              <el-col :span="7">
+                <div class="height_action_leg"></div>
+                <el-radio v-model="upload_action.type" label="1"
+                  >已送达</el-radio
+                >
+                <el-radio v-model="upload_action.type" label="2"
+                  >配送中</el-radio
+                >
+                <el-radio v-model="upload_action.type" label="3"
+                  >待发货</el-radio
+                >
+              </el-col>
+            </el-row> -->
+            <el-row :gutter="10" padding="30px">
+              <el-col :span="2">
+                <h3>物流公司:</h3>
+              </el-col>
+              <el-col :span="7">
+                <el-input
+                  placeholder="请输入内容"
+                  v-model="upload_order.time"
+                ></el-input>
+              </el-col>
+            </el-row>
+            <el-row :gutter="10" padding="30px">
+              <el-col :span="2">
+                <h3>商品名称:</h3>
+              </el-col>
+              <el-col :span="7">
+                <el-input
+                  placeholder="请输入内容"
+                  v-model="upload_order.goodsName"
+                ></el-input>
+              </el-col>
+            </el-row>
+            <!-- <el-row :gutter="10" padding="30px">
+              <el-col :span="2">
+                <h3>下单时间:</h3>
+              </el-col>
+              <div class="block">
+                <el-date-picker
+                  v-model="value1"
+                  type="date"
+                  placeholder="选择日期"
+                >
+                </el-date-picker>
+              </div>
+            </el-row> -->
+            <el-row :gutter="10" padding="30px">
+              <el-col :span="2">
+                <h3>运费:</h3>
+              </el-col>
+              <el-col :span="7">
+                <el-input
+                  placeholder="请输入内容"
+                  v-model="upload_order.freight"
+                ></el-input>
+              </el-col>
+            </el-row>
+            <el-row :gutter="10" padding="30px">
+              <el-col :span="5" :offset="5">
+                <el-button
+                  type="success"
+                  @click="insert_Order"
+                  :disabled="false"
+                  >确认添加</el-button
+                >
+                <el-button @click="dialogTableVisible = false">取消</el-button>
+              </el-col>
+            </el-row>
+          </div>
+        </el-dialog>
+ <!-- 查看订单的弹窗 -->
         <el-dialog width=75% title="查看订单内容" :visible.sync="dialogFormVisible">
          <el-descriptions class="margin-top" title="订单信息" :column="3" :size="size" border>
                 <el-descriptions-item >
@@ -169,7 +309,7 @@
  
 
   
-        <!-- 添加课程 -->
+        <!-- 添加订单 -->
         <el-table v-loading="listLoading" :data="list" border style="width: 100%">
           <el-table-column fixed prop="orderId" label="编号" width="150">
               
@@ -259,6 +399,7 @@
 <script>
   import {
    getOrder,
+   insertOrder
   } from '@/api/orderManager'
 import { getToken } from '@/utils/auth'
   export default {
@@ -280,7 +421,7 @@ import { getToken } from '@/utils/auth'
           size: 'large'
         }, ],
         list: [],
-        disabled:true,
+        disabled:false,
         action_textarea: '',
         action_radio: 1,
         dialogFormVisible: false,
@@ -299,16 +440,15 @@ import { getToken } from '@/utils/auth'
         page:1 , //当前页
         size:10   ,//每页展示的条数
         total:null,   //数据总量
-        upload_action:{
+        upload_order:{
           token:getToken(),
-          actionName:'',
-          actionImgs:'',
-          actionUrl:'',
-          actionIntro:'',
-          restDuration:0,
-          duration:0,
-          size:0,
-          type:0
+          freight:0,
+          time:'',
+          waybillNumber:'',
+          state:'',
+          price:0,
+          goodsName:'',
+          
         },
         show_img:[{name:'hhh',url:''}],
         transformPhoto:{
@@ -386,18 +526,18 @@ import { getToken } from '@/utils/auth'
               this.page = page;
               this.fetchData();
             },
-      upload_video(response){
-        this.upload_action.actionUrl=response.data
-        this.disabled=false;
-      },
-      upload_imgs(response){
-        this.upload_action.actionImgs=response.data;
-       this.disabled=false;
+      // upload_video(response){
+      //   this.upload_action.actionUrl=response.data
+      //   this.disabled=false;
+      // },
+      // upload_imgs(response){
+      //   this.upload_action.actionImgs=response.data;
+      //  this.disabled=false;
         
-      },
-      insert_action(){
+      // },
+      insert_Order(){
          this.fetchData();
-        insertAction(this.upload_action);
+       console.log(insertOrder(this.upload_order)) ;
          this.fetchData();
         this.dialogFormVisible = false;
        

@@ -9,3 +9,14 @@ export function getApply(page, size) {
         }
     })
 }
+
+export function delectApply(token, navigationId) {
+    return request({
+        url: '/admin/delectApply',
+        method: 'get',
+        params: {
+            token: token,
+            navigationId: navigationId
+        }
+    })
+}
