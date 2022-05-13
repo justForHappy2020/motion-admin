@@ -47,8 +47,6 @@
 
 
         <el-table v-loading="listLoading" :data="list" border style="width: 100%">
-          <!-- <el-table-column fixed prop="userId" label="用户ID" width="180">
-          </el-table-column> -->
            <el-table-column prop="articleId" label="文章ID" width="100">
           </el-table-column>
           <el-table-column prop="title" label="文章标题" width="230">

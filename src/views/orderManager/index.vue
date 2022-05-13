@@ -80,7 +80,7 @@
               <el-col :span="7">
                 <el-input
                   placeholder="请输入内容"
-                  v-model="upload_order.address"
+                  v-model="upload_order.express"
                 ></el-input>
               </el-col>
             </el-row>
@@ -92,7 +92,7 @@
               <el-col :span="7">
                 <el-input
                   placeholder="请输入内容"
-                  v-model="upload_order.state"
+                  v-model="upload_order.address"
                 ></el-input>
               </el-col>
             </el-row>
@@ -126,7 +126,7 @@
             </el-row> -->
             <el-row :gutter="10" padding="30px">
               <el-col :span="2">
-                <h3>物流公司:</h3>
+                <h3>时间:</h3>
               </el-col>
               <el-col :span="7">
                 <el-input
@@ -183,7 +183,7 @@
             </el-row>
           </div>
         </el-dialog>
- <!-- 查看订单的弹窗 -->
+ <!-- 查看订单的弹窗 【改】-->
         <el-dialog width=75% title="查看订单内容" :visible.sync="dialogFormVisible">
          <el-descriptions class="margin-top" title="订单信息" :column="3" :size="size" border>
                 <el-descriptions-item >
@@ -191,96 +191,138 @@
                     <i class="el-icon-user"></i>
                     运单号
                 </template>
-                00000000
+                <el-input
+                  placeholder="请输入内容"
+                  v-model="change_order.waybillNumber"
+                ></el-input>
                 </el-descriptions-item>
                  <el-descriptions-item>
                 <template slot="label">
                     <i class="el-icon-user"></i>
                     物流公司
                 </template>
-                中通快递
+               <el-input
+                  placeholder="请输入内容"
+                  v-model="change_order.express"
+                ></el-input>
                 </el-descriptions-item>
                  <el-descriptions-item>
                 <template slot="label">
                     <i class="el-icon-user"></i>
                     地址
                 </template>
-                头大大大大大大大大大
+                <el-input
+                  placeholder="请输入内容"
+                  v-model="change_order.address"
+                ></el-input>
                 </el-descriptions-item>
                  <el-descriptions-item>
                 <template slot="label">
                     <i class="el-icon-user"></i>
                     物流状态
                 </template>
-                <el-tag size="small">已送达</el-tag>
+                <el-input
+                  placeholder="请输入内容"
+                  v-model="change_order.state"
+                ></el-input>
+                <!-- <el-tag size="small">已送达</el-tag>
                 <el-tag size="small">配送中</el-tag>
-                <el-tag size="small">代发货</el-tag>
+                <el-tag size="small">代发货</el-tag> -->
                 </el-descriptions-item>
                  <el-descriptions-item>
                 <template slot="label">
                     <i class="el-icon-user"></i>
                    商品名称
                 </template>
-               计时器
+               <el-input
+                  placeholder="请输入内容"
+                  v-model="change_order.goodsName"
+                ></el-input>
                 </el-descriptions-item> 
                  <el-descriptions-item>
                 <template slot="label">
                     <i class="el-icon-user"></i>
                     下单时间
                 </template>
-                2001.04.06
+                <el-input
+                  placeholder="请输入内容"
+                  v-model="change_order.time"
+                ></el-input>
                 </el-descriptions-item>
                  <el-descriptions-item>
                 <template slot="label">
                     <i class="el-icon-user"></i>
                     运费
                 </template>
-                免运费
+                <el-input
+                  placeholder="请输入内容"
+                  v-model="change_order.freight"
+                ></el-input>
                 </el-descriptions-item>
                  <el-descriptions-item>
                 <template slot="label">
                     <i class="el-icon-user"></i>
                    价格
                 </template>
-                500
+                <el-input
+                  placeholder="请输入内容"
+                  v-model="change_order.price"
+                ></el-input>
                 </el-descriptions-item>
                 <el-descriptions-item>
                 <template slot="label">
                     <i class="el-icon-user"></i>
                     用户昵称
                 </template>
-                ljh
+                <el-input
+                  placeholder="请输入内容"
+                  v-model="change_order.freight"
+                ></el-input>
                 </el-descriptions-item>
                 <el-descriptions-item>
                 <template slot="label">
                     <i class="el-icon-mobile-phone"></i>
                     手机号
                 </template>
-                18100000000
+                <el-input
+                  placeholder="请输入内容"
+                  v-model="change_order.freight"
+                ></el-input>
                 </el-descriptions-item>
                 <el-descriptions-item>
                 <template slot="label">
                     <i class="el-icon-location-outline"></i>
                     国内承运人
                 </template>
-                lll
+                <el-input
+                  placeholder="请输入内容"
+                  v-model="change_order.freight"
+                ></el-input>
                 </el-descriptions-item>
                 <el-descriptions-item>
                 <template slot="label">
                     <i class="el-icon-mobile-phone"></i>
                     国内承运人电话号
                 </template>
+                <el-input
+                  placeholder="请输入内容"
+                  v-model="change_order.freight"
+                ></el-input>
                 </el-descriptions-item>
                 <el-descriptions-item>
                 <template slot="label">
                     <i class="el-icon-office-building"></i>
                     用户是否确认收货
                 </template>
-                <el-tag size="small">是</el-tag>
+                <!-- <el-tag size="small">是</el-tag> -->
+                <el-input
+                  placeholder="请输入内容"
+                  v-model="change_order.freight"
+                ></el-input>
                 </el-descriptions-item>
                 
             </el-descriptions>
-            <div class="height_action"></div>
+            <!-- <div class="height_action"></div>
           <h3>物流信息</h3>
             <div class="block">
                 <el-timeline>
@@ -295,22 +337,22 @@
                     {{activity.content}}
                     </el-timeline-item>
                 </el-timeline>
-                </div>
+                </div>-->
                 <div class="height_action_leg"></div>
             <el-row :gutter="10" padding="30px">
               <el-col :span="5" :offset="5">
-                <el-button type="success" @click="updata_action();TableVisible();">确认</el-button>
+                <el-button type="success" @click="updata_order();FormVisible();">确认</el-button>
               </el-col>
               <el-col :span="5">
                 <el-button @click="dialogTableVisible = false">取消</el-button>
-              </el-col>
+              </el-col> 
             </el-row>
         </el-dialog>
  
 
   
         <!-- 添加订单 -->
-        <el-table v-loading="listLoading" :data="list" border style="width: 100%">
+        <el-table v-loading="listLoading" :data="list"  style="width: 100%">
           <el-table-column fixed prop="orderId" label="编号" width="150">
               
           </el-table-column>
@@ -318,7 +360,6 @@
               
           </el-table-column>
           <el-table-column prop="" label="物流公司" width="130">
-              
           </el-table-column>
         
           <el-table-column prop="address" label="地址" width="130">
@@ -336,8 +377,8 @@
           </el-table-column>
           <el-table-column label="操作" width="180">
             <template slot-scope="scope">
-              <el-button size="mini"  @click="dialogFormVisible = true;handleEdit(scope.row);show_imgs()">查看</el-button>
-              <el-button size="mini" type="danger" @click="handleDelete(scope.row.actionId)">删除</el-button>
+              <el-button size="mini"  @click="dialogFormVisible = true;handleEdit(scope.row);">查看</el-button>
+              <el-button size="mini" type="danger" @click="handleDelete(scope.row.orderId)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -399,7 +440,9 @@
 <script>
   import {
    getOrder,
-   insertOrder
+   insertOrder,
+   delectOrder,
+   updateOrder
   } from '@/api/orderManager'
 import { getToken } from '@/utils/auth'
   export default {
@@ -422,8 +465,6 @@ import { getToken } from '@/utils/auth'
         }, ],
         list: [],
         disabled:false,
-        action_textarea: '',
-        action_radio: 1,
         dialogFormVisible: false,
         dialogVisible: false,
         dialogTableVisible:false,
@@ -448,23 +489,25 @@ import { getToken } from '@/utils/auth'
           state:'',
           price:0,
           goodsName:'',
-          
+          express:'',
+          address:''
         },
         show_img:[{name:'hhh',url:''}],
         transformPhoto:{
           file:null,
           token:getToken()
         },
-         change_action:{
-          actionId:'',
-          actionName:'',
-          actionImgs:'',
-          actionUrl:'',
-          actionIntro:'',
-          restDuration:0,
-          duration:0,
-          size:0,
-          type:0
+         change_order:{
+          token:getToken(),
+          orderId:0,
+          freight:0,
+          time:'',
+          waybillNumber:'',
+          state:'',
+          price:0,
+          goodsName:'',
+          express:'',
+          address:''
         },
       }
     },
@@ -479,14 +522,11 @@ import { getToken } from '@/utils/auth'
         this.listLoading = true
         getOrder(this.page,this.size).then(response => {
           this.list = response.data
-          console.log(response.data)
-          // this.total = response.data.total
           this.listLoading = false
         })
       },
       handleDelete(index) {
         this.open(index);
-        
       },
       open(index) {
         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -494,8 +534,8 @@ import { getToken } from '@/utils/auth'
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.delete_actioni(index);
-            this.fetchData();
+          this.delete_order(index);
+          this.fetchData();
           this.$message({
             type: 'success',
             message: '删除成功!'
@@ -526,43 +566,22 @@ import { getToken } from '@/utils/auth'
               this.page = page;
               this.fetchData();
             },
-      // upload_video(response){
-      //   this.upload_action.actionUrl=response.data
-      //   this.disabled=false;
-      // },
-      // upload_imgs(response){
-      //   this.upload_action.actionImgs=response.data;
-      //  this.disabled=false;
-        
-      // },
       insert_Order(){
          this.fetchData();
-       console.log(insertOrder(this.upload_order)) ;
+         insertOrder(this.upload_order) ;
          this.fetchData();
-        this.dialogFormVisible = false;
+         this.dialogTableVisible = false;
        
       },
-      delete_actioni(index){
-        deleteAction(getToken(),index);
-
-      },
-      //修改动作信息
-      show_imgs(){
-       this.show_img[0].url=this.change_action.actionImgs;
-       this.show_img[0].name=this.change_action.actionName;
-      },
-      change_video(response){
-        this.change_action.actionUrl=response.data
-      },
-      change_imgs(response){
-         this.change_action.actionImgs=response.data
+      delete_order(index){
+        delectOrder(getToken(),index);
+         this.fetchData();
       },
       handleEdit(row){
-        this.change_action=JSON.parse(JSON.stringify(row));
+        this.change_order=JSON.parse(JSON.stringify(row));
       },
-      updata_action(){ 
-        console.log(this.change_action);
-        updataAction(this.change_action)
+      updata_order(){ 
+        updateOrder(this.change_order)
         .then(() => {
           this.$message({
             type: 'success',
@@ -577,13 +596,10 @@ import { getToken } from '@/utils/auth'
         });
         
       },
-      TableVisible(){
-        this.dialogTableVisible =false;
+      FormVisible(){
+        this.dialogFormVisible =false;
         this.fetchData();
       },
-      disabledChange(){
-        this.disabled=true
-      }
     }
     
   }

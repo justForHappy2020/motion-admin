@@ -12,7 +12,7 @@ export function deleteArticle(token, articleId) {
 }
 export function updataArticle(token, articleId) {
     return request({
-        url: '/admin/deleteArticle',
+        url: '/admin/updataArticle',
         method: 'get',
         params: {
             token: token,

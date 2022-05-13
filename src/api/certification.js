@@ -20,3 +20,10 @@ export function delectApply(token, navigationId) {
         }
     })
 }
+export function insertApply(data) {
+    return request({
+        url: '/admin/insertApply',
+        method: 'post',
+        data
+    })
+}

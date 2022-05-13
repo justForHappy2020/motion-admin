@@ -152,7 +152,7 @@
           <el-table-column label="操作" width="180">
             <template slot-scope="scope">
               <el-button size="mini"  @click="dialogTableVisible = true;handleEdit(scope.row);show_imgs()">编辑</el-button>
-              <el-button size="mini" type="danger" @click="handleDelete(scope.row.actionId)">删除</el-button>
+              <el-button size="mini" type="danger" @click="handleDelete(scope.row.dailyTaskId)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -210,11 +210,8 @@
 
 <script>
   import {
-    deleteAction,
-    getList,
-    insertAction,
-    updataAction,
-  } from '@/api/action'
+    deleteDailyTask
+  } from '@/api/dailyTask'
 import { getToken } from '@/utils/auth'
   export default {
     data() {
@@ -293,7 +290,7 @@ import { getToken } from '@/utils/auth'
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.delete_actioni(index);
+          this.delete_task(index);
             this.fetchData();
           this.$message({
             type: 'success',
@@ -341,8 +338,8 @@ import { getToken } from '@/utils/auth'
         this.dialogFormVisible = false;
        
       },
-      delete_actioni(index){
-        deleteAction(getToken(),index);
+      delete_task(index){
+        dailyTaskId(getToken(),index);
 
       },
       //修改动作信息

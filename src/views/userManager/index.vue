@@ -168,7 +168,7 @@
             </el-row>
           </div>
         </el-dialog>
-
+<!-- 显示用户【查】 -->
         <el-table v-loading="listLoading" :data="list" border style="width: 100%">
           <el-table-column fixed prop="userId" label="用户ID" width="180">
           </el-table-column>

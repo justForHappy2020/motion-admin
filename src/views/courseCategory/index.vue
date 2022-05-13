@@ -40,14 +40,6 @@
           <el-dialog custom-class="scroll" width=90% title="课程分类管理/添加分类" :visible.sync="dialogFormVisible">
             <div class="height_action">请填写课程分类相关信息</div>
             <div class="demo-input-suffix">
-<!--              <el-row :gutter="10" pading="30px">
-                <el-col :span="3">
-                  <h3>创建人:</h3>
-                </el-col>
-                <el-col :span="7">
-                  <el-input placeholder="请输入名字" v-model="action_name_input"></el-input>
-                </el-col>
-              </el-row> -->
               <el-row :gutter="10">
                 <el-col :span="3">
                   <h3>课程分类组名称:</h3>
@@ -69,8 +61,6 @@
                   accept=".jpg,.png"
                   drag="true"
                   list-type="picture-card"
-                  :on-preview="handlePictureCardPreview"
-                  :on-remove="handleRemove"
                   :on-success="transformPhoto2List"
                   name="headPortrait"
                   v-model="transformPhoto.file"
@@ -158,14 +148,6 @@
  <el-dialog custom-class="scroll" width=90% title="课程分类管理/编辑分类" :visible.sync="dialogTableVisible">
             <div class="height_action">请填写课程分类相关信息</div>
             <div class="demo-input-suffix">
-<!--              <el-row :gutter="10" pading="30px">
-                <el-col :span="3">
-                  <h3>创建人:</h3>
-                </el-col>
-                <el-col :span="7">
-                  <el-input placeholder="请输入名字" v-model="action_name_input"></el-input>
-                </el-col>
-              </el-row> -->
               <el-row :gutter="10">
                 <el-col :span="3">
                   <h3>课程分类组名称:</h3>
